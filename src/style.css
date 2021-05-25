@@ -1,0 +1,27 @@
+html {
+	--text-color-primary: #1b1b1b;
+	--text-color-secondary: #313131;
+	--border-color: #bdbdbd;
+}
+
+body {
+    font-family: 'dm sans', sans-serif;
+}
+
+.action-special {
+	border-radius: 50px;
+	background-color: var(--text-color-primary);
+	text-decoration: none;
+	color: #fff;
+	border: none;
+	padding: 10px 20px;
+	display: inline-block;
+}
+
+.text-capitalize {
+	text-transform: capitalize;
+}
+
+.text-uppercase {
+	text-transform: uppercase;
+}
