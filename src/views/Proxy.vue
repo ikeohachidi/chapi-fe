@@ -79,7 +79,16 @@ export default class Proxy extends Vue {
     }
     
     private updateQuery(query: Query): void {
-        this.$store.dispatch('proxy/updateQuery', query)
+        const requestObject: ProjectProxyQuery = {
+            projectId: this.projectId,
+            proxyId: this.proxyId,
+            query
+        }
+
+        this.$store.dispatch('proxy/updateQuery', requestObject)
+            .catch((error) => {
+                console.log(error)
+            })
     }
 
     private deleteQuery(query: Query): void {

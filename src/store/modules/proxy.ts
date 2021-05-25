@@ -26,6 +26,21 @@ const proxy = {
                 Vue.set(state.projectProxies, project.projectId, project.proxies)
             }
         },
+        updateQuery(state: ProxyState, update: ProjectProxyQuery): void {
+            const projectProxies =  state.projectProxies[update.projectId];
+
+            for (let i = 0; i < projectProxies.length; i++) {
+                if (projectProxies[i].id === update.proxyId) {
+                    const queryIndex = projectProxies[i].queries.findIndex(query => query.id === update.query.id);
+
+                    if (queryIndex !== -1) {
+                        projectProxies[i].queries[queryIndex] = update.query;
+                    }
+
+                    break;
+                }
+            }
+        },
         removeQuery(state: ProxyState, update: ProjectProxyQuery): void {
             const projectProxies =  state.projectProxies[update.projectId];
 
@@ -56,14 +71,15 @@ const proxy = {
                     })
             }) 
         },
-        updateQuery(context: ProxyContext, query: Query): Promise<void> {
+        updateQuery(context: ProxyContext, requestObject: ProjectProxyQuery): Promise<void> {
             return new Promise((resolve, reject) => {
                 fetch(`${API}/query`, {
                         method: 'PUT',
-                        body: JSON.stringify(query)
+                        body: JSON.stringify(requestObject.query)
                     })
                     .then((res) => res.json())
                     .then(() => {
+                        context.commit('updateQuery', requestObject)
                         resolve()
                     })
                     .catch((error) => {
@@ -78,7 +94,6 @@ const proxy = {
                     })
                     .then((res) => res.json())
                     .then(() => {
-                        console.log('can remove')
                         context.commit('removeQuery', requestObject)
                         resolve()
                     })
