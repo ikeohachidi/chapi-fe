@@ -37,3 +37,9 @@ export type ProjectProxy = {
     projectId: string;
     proxies: Proxy[]
 }
+
+export type ProjectProxyQuery = {
+    projectId: string;
+    proxyId: string;
+    query: Query;
+}

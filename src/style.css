@@ -5,7 +5,11 @@ html {
 }
 
 body {
-    font-family: 'dm sans', sans-serif;
+    font-family: 'dm sans', 'lato', 'helvetica neue', sans-serif !important;
+}
+
+* {
+	box-sizing: border-box;
 }
 
 .action-special {
@@ -24,4 +28,32 @@ body {
 
 .text-uppercase {
 	text-transform: uppercase;
+}
+
+.text-size-1 {
+	font-size: 16px !important;
+}
+
+.text-size-2 {
+	font-size: 18px !important;
+}
+
+.text-size-3 {
+	font-size: 21px !important;
+}
+
+.text-size-4 {
+	font-size: 23px !important;
+}
+
+.text-size-5 {
+	font-size: 25px !important;
+}
+
+.text-size-6 {
+	font-size: 28px !important;
+}
+
+.margin-b-0 {
+	margin-bottom: 0;
 }

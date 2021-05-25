@@ -1,66 +1,64 @@
 <template>
-    <section>
-        <b-container>
-            <b-row>
-                <b-col cols="8" class="mx-auto">
-                    <div class="d-flex justify-content-end align-items-center">
-                        <p>https://chapihq{{ proxy.chapiURL }}</p>
-                    </div>
-                    <h6 class="fw-bold">{{ proxy.name }}</h6>
-                    <div class="d-flex align-items-center">
-                        <p class="mb-0 me-2">Destination URL</p>
-                        <!-- <sui-input placeholder="https://" v-model="proxy.url"/> -->
-                    </div>
-                    <div class="d-flex align-items-center">
-                        <p class="mb-0 me-2">HTTP Method</p>
-                        <!-- <sui-dropdown
-                            :options="HTTPMethodOptions"
-                            placeholder="Method"
-                            search
-                            selection
-                            v-model="proxy.method"
-                        /> -->
-                    </div>
-                    <table class="ui celled striped table">
-                        <thead>
-                            <tr>
-                                <th colspan="3">URL Queries</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="collapsing">Name</td>
-                                <td>Value</td>
-                                <td class="right aligned collapsing">action</td>
-                            </tr>
-                            <tr v-for="(query, queryIndex) in proxy.queries" :key="queryIndex">
-                                <td>
-                                    <div class="ui input">
-                                        <input type="text" placeholder="Search..." v-model="query.name">
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="ui input">
-                                        <input type="text" placeholder="Search..." v-model="query.value">
-                                    </div>
-                                </td>
-                                <td>
-                                    <button class="ui primary button" @click="updateQuery(query)">Update</button>
-                                    <button class="ui icon button"><i class="trash icon"></i></button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </b-col>
-            </b-row>
-        </b-container>
+    <section class="ui container">
+        <div class="ui grid">
+            <div class="column ten wide centered">
+                <p>https://chapihq{{ proxy.chapiURL }}</p>
+                <h6>{{ proxy.name }}</h6>
+
+                <p class="margin-b-0 text-size-1">Destination URL</p>
+                <div class="ui left action input fluid">
+                    <select class="ui compact selection dropdown">
+                        <option 
+                            v-for="methodOption in HTTPMethodOptions" 
+                            :key="methodOption"
+                            :value="methodOption" 
+                            :selected="proxy.method.toLowerCase() === methodOption.toLowerCase()"
+                        >
+                            {{ methodOption }}
+                        </option>
+                    </select>
+                    <input type="text" v-model="proxy.url">
+                </div>
+
+                <table class="ui celled striped table">
+                    <thead>
+                        <tr>
+                            <th colspan="3">Queries</th>
+                        </tr>
+                        <tr>
+                            <th>Name</th>
+                            <th>Value</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(query, queryIndex) in proxy.queries" :key="queryIndex">
+                            <td>
+                                <div class="ui input">
+                                    <input type="text" v-model="query.name">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="ui input">
+                                    <input type="text" v-model="query.value">
+                                </div>
+                            </td>
+                            <td>
+                                <button class="ui primary button" @click="updateQuery(query)">Update</button>
+                                <button class="ui icon button" @click="deleteQuery(query)"><i class="trash icon"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </section>
 </template>
 
 <script lang='ts'>
 import {Vue, Component} from 'vue-property-decorator';
 
-import ProxyClass, { Query } from '@/types/Proxy'
+import ProxyClass, { ProjectProxyQuery, Query } from '@/types/Proxy'
 import { HTTPMethod } from '@/types/HTTP';
 
 @Component
@@ -68,10 +66,8 @@ export default class Proxy extends Vue {
     private proxy: ProxyClass = new ProxyClass;
     private _proxyCheck: ProxyClass = new ProxyClass;
 
-    get HTTPMethodOptions(): Record<string, string>[] {
-        return Object.keys(HTTPMethod).map(key => {
-            return { text: key, value: key }
-        })
+    get HTTPMethodOptions(): string[] {
+        return Object.keys(HTTPMethod)
     }
 
     get projectId(): string {
@@ -87,10 +83,13 @@ export default class Proxy extends Vue {
     }
 
     private deleteQuery(query: Query): void {
-        this.$store.dispatch('proxy/deleteQuery', query)
-            .then(() => {
-                console.log('oh')
-            })
+        const requestObject: ProjectProxyQuery = {
+            projectId: this.projectId,
+            proxyId: this.proxyId,
+            query
+        }
+
+        this.$store.dispatch('proxy/deleteQuery', requestObject)
             .catch((error) => {
                 console.log(error)
             })

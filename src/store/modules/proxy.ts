@@ -1,5 +1,5 @@
 import { ActionContext } from 'vuex';
-import Proxy, { ProjectProxy, Query } from '@/types/Proxy';
+import Proxy, { ProjectProxy, ProjectProxyQuery, Query } from '@/types/Proxy';
 import StoreState from '@/store/storeState';
 import Vue from 'vue';
 
@@ -26,6 +26,21 @@ const proxy = {
                 Vue.set(state.projectProxies, project.projectId, project.proxies)
             }
         },
+        removeQuery(state: ProxyState, update: ProjectProxyQuery): void {
+            const projectProxies =  state.projectProxies[update.projectId];
+
+            for (let i = 0; i < projectProxies.length; i++) {
+                if (projectProxies[i].id === update.proxyId) {
+                    const queryIndex = projectProxies[i].queries.findIndex(query => query.id === update.query.id);
+
+                    if (queryIndex !== -1) {
+                        projectProxies[i].queries.splice(queryIndex, 1)
+                    }
+
+                    break;
+                }
+            }
+        }
     },
     actions: {
         fetchProjectProxies(context: ProxyContext, projectId: string): Promise<void> {
@@ -56,13 +71,15 @@ const proxy = {
                     })
             })
         },
-        deleteQuery(context: ProxyContext, query: Query): Promise<void> {
+        deleteQuery(context: ProxyContext, requestObject: ProjectProxyQuery): Promise<void> {
             return new Promise((resolve, reject) => {
-                fetch(`${API}/query/${query.id}`, {
+                fetch(`${API}/query/${requestObject.query.id}`, {
                         method: 'DELETE',
                     })
                     .then((res) => res.json())
                     .then(() => {
+                        console.log('can remove')
+                        context.commit('removeQuery', requestObject)
                         resolve()
                     })
                     .catch((error) => {
