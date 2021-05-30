@@ -24,6 +24,21 @@
         </div>
         <div class="section">
             <div>
+                <p class="section-name">Destination URL</p>
+                <p class="section-description">
+                    Please enter the URL you'd like to make a request to. Make sure you have the right 
+                    <span class="inline-block rounded-sm bg-gray-300 p-1 font-mono">HTTP Method</span> set
+                </p>
+            </div>
+            <div>
+                <select v-model="proxy.method" class="rounded-r-none w-2/12">
+                    <option v-for="method in HTTPMethodOptions" :key="method" :value="method" class="uppercase">{{ method }}</option>
+                </select>
+                <input class="rounded-l-none border-l-0 w-10/12" v-model="proxy.chapiURL">
+            </div>
+        </div>
+        <div class="section">
+            <div>
                 <div class="section-name">URL Queries</div>
                 <div class="section-description">
                     Enter the queries that will be placed on request the URL during the request 
@@ -66,6 +81,19 @@
                 </table>
             </div>
         </div>
+        <div class="section">
+            <div>
+                <div class="section-name">Request Body</div>
+                <div class="section-description">
+                    You can add a request body to your proxy. Please note that the body should be in a JSON format.
+                </div>
+            </div>
+            <div>
+                <textarea rows="10" class="w-full font-mono resize-none" onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}">
+                {}
+                </textarea>
+            </div>
+        </div>
     </section>
 </template>
 
@@ -99,7 +127,7 @@ export default class Proxy extends Vue {
         }
 
         return false
-    } 
+    }
     
     private updateQuery(query: Query): void {
         const requestObject: ProjectProxyQuery = {
@@ -151,6 +179,11 @@ export default class Proxy extends Vue {
 .section {
     @apply grid grid-cols-3 gap-5 px-8 py-5 border-b border-gray-200;
 }
+
+.section:last-of-type {
+    @apply border-b-0 !important;
+}
+
 .section div:last-of-type {
     @apply col-span-2;
 }

@@ -7,13 +7,14 @@ body {
 }
 
 input, 
-textarea {
-    @apply px-4 py-2 border border-gray-200 rounded-md;
+textarea,
+select {
+    @apply px-4 py-2 border border-gray-200 rounded-md text-sm bg-white;
     @apply focus:outline-none focus:ring-1;
 }
 
 button {
-    @apply bg-indigo-700 text-white rounded-md px-5 py-2;
+    @apply bg-indigo-700 text-white rounded-md px-5 py-2 text-sm;
 }
 
 button:disabled {

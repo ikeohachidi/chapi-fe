@@ -1,5 +1,5 @@
 import { ActionContext } from 'vuex';
-import Proxy, { ProjectProxy, ProjectProxyQuery, Query } from '@/types/Proxy';
+import Proxy, { ProjectProxy, ProjectProxyQuery } from '@/types/Proxy';
 import StoreState from '@/store/storeState';
 import Vue from 'vue';
 
