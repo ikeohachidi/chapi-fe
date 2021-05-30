@@ -1,16 +1,11 @@
 <template>
-    <section class="main ui container">
-        <template v-if="projectProxies">
-            <div class="ui grid">
-                <div 
-                    v-for="(proxy, proxyIndex) in projectProxies"
-                    :key="proxyIndex"
-                    class="column four wide"
-                >
-                    <proxy-card :proxy="proxy" @click.native="onProxyCardClick(proxy)"/>
-                </div>
-            </div>
-        </template>
+    <section class="px-5 grid grid-cols-3 gap-5">
+        <ProxyCard 
+            v-for="(proxy, proxyIndex) in projectProxies"
+            :key="proxyIndex"
+            :proxy="proxy"
+            @click.native="onProxyCardClick(proxy)"
+        />
     </section>
 </template>
 

@@ -1,26 +1,9 @@
 <template>
     <section class="dashboard">
-        <div class="left-pane">
-            <div class="p-4">
-                <h5 class="fw-bold">Projects</h5>
-                <div class="ui input">
-                    <input type="text" placeholder="Search Project" v-model="projectSearch">
-                </div>
-            </div>
-
-            <ul>
-                <li 
-                    v-for="project in projects" 
-                    class="px-4"
-                    :class="{'active': selectedProject.id === project.id}"
-                    :key="project.id"
-                    @click="getProjectProxies(project)"
-                >
-                    {{ project.name }}
-                </li>
-            </ul>
+        <div class="left-pane border-r border-gray-200">
+            <ProjectNav />
         </div>
-        <div class="right-pane" style="overflow-y: auto;">
+        <div class="right-pane overflow-y-auto bg-blue-100 bg-opacity-20">
             <router-view/>
         </div>
     </section>
@@ -29,39 +12,14 @@
 <script lang='ts'>
 import {Vue, Component} from 'vue-property-decorator';
 
+import ProjectNav from '@/components/ProjectNav/ProjectNav.vue';
 
-import Project from '@/types/Project';
-import Proxy from '@/types/Proxy';
-
-@Component
-export default class Dashboard extends Vue {
-    private projectSearch = '';
-
-    private selectedProject: Project = new Project;
-
-    get projects(): Project[] {
-        return this.$store.state.project.projects
+@Component({
+    components: {
+        ProjectNav
     }
-
-    get projectProxies(): {[projectId: string]: Proxy[]} {
-        return this.$store.state.proxy.projectProxies
-    }
-
-    private getProjectProxies(project: Project) {
-        this.$router.push({ 
-            name: 'Proxies List',
-            query: {
-                project: project.id
-            }
-        })
-    }
-
-    mounted(): void {
-        if (this.projects.length === 0) {
-            this.$store.dispatch('project/fetchProjects')
-        }
-    }
-}
+})
+export default class Dashboard extends Vue {}
 </script>
 
 <style lang="scss" scoped>
@@ -77,7 +35,6 @@ export default class Dashboard extends Vue {
 .left-pane {
     width: 25%;
     max-width: 350px;
-    border-right: 1px solid var(--border-color);
 
     ul {
         list-style-type: none;
@@ -91,7 +48,6 @@ export default class Dashboard extends Vue {
 
 .right-pane {
     width: 75%;
-    // background-color: #dbeafe;
     padding: 30px 0;
 }
 </style>

@@ -1,27 +1,23 @@
 <template>
-    <section class="py-2">
-        <b-container>
-            <b-row>
-                <b-col cols="12" class="d-flex align-items-center justify-content-between">
-                    <router-link to="/" tag="span">
-                        Chapi
-                    </router-link>
+    <section class="py-2 border-b border-gray-200">
+        <div class="flex flex-row justify-between px-5">
+            <router-link to="/" tag="span">
+                Chapi
+            </router-link>
 
-                    <ul>
-                        <router-link 
-                            v-for="route in routes" 
-                            :key="route.link"
-                            :to="route.link"
-                            class="px-3"
-                            custom
-                            v-slot="{ navigate }"
-                        >
-                            <li @click="navigate" @keypress.enter="navigate">{{ route.text }}</li>
-                        </router-link>
-                    </ul>
-                </b-col>
-            </b-row>
-        </b-container>
+            <ul>
+                <router-link 
+                    v-for="route in routes" 
+                    :key="route.link"
+                    :to="route.link"
+                    class="px-3"
+                    custom
+                    v-slot="{ navigate }"
+                >
+                    <li @click="navigate" @keypress.enter="navigate">{{ route.text }}</li>
+                </router-link>
+            </ul>
+        </div>
     </section>
 </template>
 
@@ -40,10 +36,6 @@ export default class Navbar extends Vue {
 </script>
 
 <style lang="scss" scoped>
-section {
-    border-bottom: 1px solid var(--border-color);
-}
-
 ul {
     display: flex;
     margin-bottom: 0;

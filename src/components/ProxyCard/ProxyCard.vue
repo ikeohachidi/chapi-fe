@@ -1,15 +1,12 @@
 <template>
-    <div class="ui card">
-        <div class="content">
-            <div class="meta text-uppercase" style="margin-bottom: 10px;">{{ proxy.method }}</div>
-            <div class="header">{{ proxy.name }}</div>
-            <div class="description">
-                {{ proxy.url }}
-            </div>
-            <div class="right aligned" style="margin-top: 10px;">
-                {{ proxy.queries.length }} Request Quer{{ proxy.queries.length > 1 ? 'ies' : 'y' }}
-            </div>
-        </div>
+    <div class="rounded-md bg-white border border-gray-200 p-4 hover:shadow-sm duration-75">
+        <p class="uppercase text-gray-400">{{ proxy.method}}</p>
+        <p class="text-lg font-bold text-gray-800">{{ proxy.name }}</p>
+        <p class="text-sm">{{ proxy.description }}</p>
+
+        <p class="text-gray-400 mt-8">
+            {{ proxy.queries.length }} Request Quer{{ proxy.queries.length > 1 ? 'ies' : 'y' }}
+        </p>
     </div>
 </template>
 

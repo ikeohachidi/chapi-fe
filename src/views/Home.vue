@@ -1,9 +1,9 @@
 <template>
 	<section>
 		<div style="padding-top: 120px;">
-			<b-container>
-				<b-row>
-					<b-col cols="9" class="mx-auto text-center">
+			<div>
+				<div>
+					<div class="mx-auto text-center">
 						<h1 class="fw-bold" style="font-size: 36px; color: var(--text-color-primary)">
 							Lorem ipsum dolor sit amet, consectetur adipiscing elit. Gravida augue ultricies varius
 						</h1>
@@ -11,19 +11,19 @@
 							Lorem ipsum dolor sit amet, consectetur adipiscing elit. Gravida augue ultricies varius 
 						</p>
 						<router-link to="signin" class="action-special">Get started</router-link>
-					</b-col>
-				</b-row>
-			</b-container>
+					</div>
+				</div>
+			</div>
 		</div>
 
-		<b-container style="padding-top: 120px;">
-			<b-row>
-				<b-col cols="8">
+		<div style="padding-top: 120px;">
+			<div>
+				<div>
 					<h5 class="fw-bold">Protect your API keys</h5>
 					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Imperdiet orci sed commodo tincidunt. Ipsum mattis sed eu in sit et. Bibendum sem eget feugiat morb.</p>
-				</b-col>
-			</b-row>
-		</b-container>
+				</div>
+			</div>
+		</div>
 	</section>
 </template>
 
@@ -32,6 +32,5 @@ import {Vue, Component} from 'vue-property-decorator';
 
 @Component
 export default class Home extends Vue {
-
 }
 </script>
