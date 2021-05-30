@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    font-family: 'dm sans', 'lato', 'helvetica neue', sans-serif !important;
+}
+
+input {
+    @apply px-4 py-2 border border-gray-200 rounded-md;
+    @apply focus:outline-none focus:ring-1;
+}
