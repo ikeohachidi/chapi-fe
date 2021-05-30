@@ -60,9 +60,3 @@ export default class ProxyList extends Vue {
     }
 }
 </script>
-
-<style scoped>
-.main {
-    margin: 0 10px !important;
-}
-</style>

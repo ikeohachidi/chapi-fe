@@ -1,51 +1,65 @@
 <template>
-    <section class="ui container">
-        <div class="ui grid">
-            <div class="column ten wide centered">
-                <p>https://chapihq{{ proxy.chapiURL }}</p>
-                <h6>{{ proxy.name }}</h6>
-
-                <p class="margin-b-0 text-size-1">Destination URL</p>
-                <div class="ui left action input fluid">
-                    <select class="ui compact selection dropdown">
-                        <option 
-                            v-for="methodOption in HTTPMethodOptions" 
-                            :key="methodOption"
-                            :value="methodOption" 
-                            :selected="proxy.method.toLowerCase() === methodOption.toLowerCase()"
-                        >
-                            {{ methodOption }}
-                        </option>
-                    </select>
-                    <input type="text" v-model="proxy.url">
+    <section>
+        <div class="section">
+            <div>
+                <p class="section-name">Name</p>
+                <p class="section-description">
+                    Please enter the name of this proxy. This is an important step as your projects proxies can really build up and wil need to be easily identified 
+                </p>
+            </div>
+            <div>
+                <input placeholder="Proxy Name" v-model="proxy.name" class="w-full">
+            </div>
+        </div>
+        <div class="section">
+            <div>
+                <p class="section-name">Description</p>
+                <p class="section-description">
+                    Sometimes the proxy name isn't enough to help your remember. Your project description will help you identify your proxy faster when going through them in the proxy list page.
+                </p>
+            </div>
+            <div>
+                <textarea class="w-full resize-none" rows="6" placeholder="Proxy Description"></textarea>
+            </div>
+        </div>
+        <div class="section">
+            <div>
+                <div class="section-name">URL Queries</div>
+                <div class="section-description">
+                    Enter the queries that will be placed on request the URL during the request 
                 </div>
-
-                <table class="ui celled striped table">
+            </div>
+            <div>
+                <table>
                     <thead>
-                        <tr>
-                            <th colspan="3">Queries</th>
-                        </tr>
-                        <tr>
-                            <th>Name</th>
-                            <th>Value</th>
+                        <tr class="text-left text-gray-800">
+                            <th class="py-2 pl-3 font-normal">Name</th>
+                            <th class="px-3 font-normal">Value</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="(query, queryIndex) in proxy.queries" :key="queryIndex">
-                            <td>
+                            <td class="py-2">
                                 <div class="ui input">
                                     <input type="text" v-model="query.name">
                                 </div>
                             </td>
-                            <td>
+                            <td class="px-3">
                                 <div class="ui input">
                                     <input type="text" v-model="query.value">
                                 </div>
                             </td>
                             <td>
-                                <button class="ui primary button" @click="updateQuery(query)">Update</button>
-                                <button class="ui icon button" @click="deleteQuery(query)"><i class="trash icon"></i></button>
+                                <div class="flex items-center justify-center">
+                                    <button 
+                                        @click="updateQuery(query)"
+                                        :disabled="hasQueryChanged(queryIndex)"
+                                    >
+                                        Update
+                                    </button>
+                                    <span class="gg-trash text-red-600 cursor-pointer mx-4 hover:scale-50" @click="deleteQuery(query)"></span>
+                                </div>
                             </td>
                         </tr>
                     </tbody>
@@ -77,6 +91,15 @@ export default class Proxy extends Vue {
     get proxyId(): string {
         return this.$route.query['proxy'] as string;
     }
+
+    private hasQueryChanged(index: number): boolean {
+        if (this._proxyCheck.id && this.proxy.id) {
+            return this._proxyCheck.queries[index].name === this.proxy.queries[index].name &&
+                this._proxyCheck.queries[index].value == this.proxy.queries[index].value;
+        }
+
+        return false
+    } 
     
     private updateQuery(query: Query): void {
         const requestObject: ProjectProxyQuery = {
@@ -124,5 +147,61 @@ export default class Proxy extends Vue {
 }
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
+.section {
+    @apply grid grid-cols-3 gap-5 px-8 py-5 border-b border-gray-200;
+}
+.section div:last-of-type {
+    @apply col-span-2;
+}
+
+.section-name {
+    @apply text-gray-900 font-medium text-base mb-2;
+}
+
+.section-description {
+    @apply text-gray-600 leading-5 text-sm;
+}
+
+.gg-trash {
+    box-sizing: border-box;
+    position: relative;
+    display: block;
+    transform: scale(var(--ggs,1));
+    width: 10px;
+    height: 12px;
+    border: 2px solid transparent;
+    box-shadow:
+        0 0 0 2px,
+        inset -2px 0 0,
+        inset 2px 0 0;
+    border-bottom-left-radius: 1px;
+    border-bottom-right-radius: 1px;
+    margin-top: 4px
+}
+.gg-trash::after,
+.gg-trash::before {
+    content: "";
+    display: block;
+    box-sizing: border-box;
+    position: absolute
+}
+.gg-trash::after {
+    background: currentColor;
+    border-radius: 3px;
+    width: 16px;
+    height: 2px;
+    top: -4px;
+    left: -5px
+}
+.gg-trash::before {
+    width: 10px;
+    height: 4px;
+    border: 2px solid;
+    border-bottom: transparent;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+    top: -7px;
+    left: -2px
+}
 </style>

@@ -6,7 +6,20 @@ body {
     font-family: 'dm sans', 'lato', 'helvetica neue', sans-serif !important;
 }
 
-input {
+input, 
+textarea {
     @apply px-4 py-2 border border-gray-200 rounded-md;
     @apply focus:outline-none focus:ring-1;
+}
+
+button {
+    @apply bg-indigo-700 text-white rounded-md px-5 py-2;
+}
+
+button:disabled {
+    @apply bg-indigo-300;
+}
+
+button.danger {
+    @apply bg-red-500;
 }
