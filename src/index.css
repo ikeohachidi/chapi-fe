@@ -17,6 +17,10 @@ button {
     @apply bg-indigo-700 text-white rounded-md px-5 py-2 text-sm;
 }
 
+button:hover {
+    @apply bg-indigo-800;
+}
+
 button:disabled {
     @apply bg-indigo-300;
 }
