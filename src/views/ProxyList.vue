@@ -1,10 +1,16 @@
 <template>
-    <section class="px-5 grid grid-cols-3 gap-5">
+    <section class="px-5 grid grid-cols-3 gap-5 min-h-full">
+        <div class="w-full rounded-lg border-dashed border-4 flex items-center justify-center h-36" @click="goToProxy">
+            <div class="transform scale-150 text-gray-400">
+                <span class="gg-math-plus"></span>
+            </div>
+        </div>
         <ProxyCard 
+            class="h-36"
             v-for="(proxy, proxyIndex) in projectProxies"
             :key="proxyIndex"
             :proxy="proxy"
-            @click.native="onProxyCardClick(proxy)"
+            @click.native="goToProxy(proxy)"
         />
     </section>
 </template>
@@ -36,12 +42,12 @@ export default class ProxyList extends Vue {
         return []
     }
 
-    private onProxyCardClick(proxy: Proxy): void {
+    private goToProxy(proxy: Proxy): void {
         this.$router.push({
             name: 'Proxy' ,
             query: {
                 project: this.projectId,
-                proxy: proxy.id
+                proxy: proxy ? proxy.id : ''
             }
         })
     }
