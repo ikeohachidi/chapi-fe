@@ -83,7 +83,9 @@ const project = {
         },
         deleteProject(context: ProjectContext, projectId: string): Promise<void> {
             return new Promise((resolve, reject) => {
-                fetch(`${API}/project/${projectId}`,)
+                fetch(`${API}/project/${projectId}`, {
+                        method: 'DELETE'
+                    })
                     .then((res) => res.json())
                     .then(() => {
                         context.commit('deleteProject', projectId)

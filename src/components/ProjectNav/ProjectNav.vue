@@ -27,12 +27,17 @@
         <ul class="pt-4 px-4">
             <li 
                 v-for="project in projects" 
-                class="px-4 py-3"
+                class="px-4 py-3 flex justify-between items-center"
                 :class="{'active': selectedProject.id === project.id}"
                 :key="project.id"
                 @click="getProjectProxies(project)"
             >
-                {{ project.name }}
+                <span>{{ project.name }}</span>
+                <span 
+                    class="gg-trash text-gray-200 hover:text-red-500 transition duration-300 cursor-pointer" 
+                    @click="deleteProject(project.id)"
+                >
+                </span>
             </li>
         </ul>
     </section>
@@ -43,7 +48,7 @@ import {Vue, Component} from 'vue-property-decorator';
 
 import Modal from '@/components/Modal/Modal.vue';
 
-import { projects, fetchProjects, createProject } from '@/store/modules/project';
+import { projects, fetchProjects, createProject, deleteProject } from '@/store/modules/project';
 
 import Project from '@/types/Project';
 import Proxy from '@/types/Proxy';
@@ -72,6 +77,10 @@ export default class ProjectNav extends Vue {
 
     private createNewProject() {
         createProject(this.$store, this.newProjectName)
+    }
+
+    private deleteProject(projectId: string) {
+        deleteProject(this.$store, projectId)
     }
 
     private getProjectProxies(project: Project) {
