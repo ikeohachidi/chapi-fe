@@ -5,3 +5,9 @@ export enum HTTPMethod {
     DELETE = 'DELETE',
     PATCH = 'PATCH'
 }
+
+export type Response<T> = {
+    text: string;
+    type: boolean;
+    data: T;
+}
