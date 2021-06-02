@@ -4,7 +4,7 @@
             <div>
                 <p class="section-name">Name</p>
                 <p class="section-description">
-                    Please enter the name of this proxy. This is an important step as your projects proxies can really build up and wil need to be easily identified 
+                    A Good proxy name will help for easy identification later.
                 </p>
             </div>
             <div>
@@ -15,7 +15,7 @@
             <div>
                 <p class="section-name">Description</p>
                 <p class="section-description">
-                    Sometimes the proxy name isn't enough to help your remember. Your project description will help you identify your proxy faster when going through them in the proxy list page.
+                    It would be best if your description explains what your proxy does clearly. Proxies created can get out of hand. 
                 </p>
             </div>
             <div>

@@ -27,14 +27,14 @@
         <ul class="pt-4 px-4">
             <li 
                 v-for="project in projects" 
-                class="px-4 py-3 flex justify-between items-center"
+                class="px-4 py-3 flex justify-between items-center cursor-pointer"
                 :class="{'active': selectedProject.id === project.id}"
                 :key="project.id"
                 @click="getProjectProxies(project)"
             >
                 <span>{{ project.name }}</span>
                 <span 
-                    class="gg-trash text-gray-200 hover:text-red-500 transition duration-300 cursor-pointer" 
+                    class="gg-trash text-gray-200 hover:text-red-500 transition duration-300" 
                     @click="deleteProject(project.id)"
                 >
                 </span>
