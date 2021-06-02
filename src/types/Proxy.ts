@@ -1,22 +1,24 @@
 export default class Proxy {
-    id: string;
+    id?: string;
     name: string;
+    description: string;
     url: string;
     chapiURL: string;
     method: string;
     queries: Query[];
     authorizedURLs: AuthorizedURL[];
-    projectId: string;
+    projectId: number;
 
     constructor() {
         this.id = '';
         this.name = '';
+        this.description = '';
         this.url = '';
         this.chapiURL = '';
-        this.method = '';
+        this.method = 'GET';
         this.queries = [];
         this.authorizedURLs = [];
-        this.projectId = '';
+        this.projectId = 0;
     }
 }
 

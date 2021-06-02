@@ -1,7 +1,9 @@
 import { ActionContext } from 'vuex';
+import { getStoreAccessors } from 'vuex-typescript';
 import Proxy, { ProjectProxy, ProjectProxyQuery } from '@/types/Proxy';
 import StoreState from '@/store/storeState';
 import Vue from 'vue';
+import { Response } from '@/types/HTTP';
 
 type ProxyContext = ActionContext<ProxyState, StoreState>;
 
@@ -18,6 +20,11 @@ const state: ProxyState = {
 const proxy = {
     namespaced: true,
     state,
+    getters: {
+        getProjectProxies(state: ProxyState): {[projectId: string]: Proxy[]} {
+            return state.projectProxies
+        }
+    },
     mutations: {
         setProjectProxy(state: ProxyState, project: ProjectProxy): void {
             if (project.projectId in state.projectProxies) {
@@ -58,6 +65,33 @@ const proxy = {
         }
     },
     actions: {
+        createProxy(context: ProxyContext, proxy: Proxy): Promise<void> {
+            delete proxy.id;
+
+            return new Promise((resolve, reject) => {
+                fetch(`${API}/proxy`, {
+                        method: 'POST',
+                        body: JSON.stringify(proxy)
+                    })
+                    .then((res) => res.json())
+                    .then((body: Response<string>) => {
+                        proxy.id = body.data;
+                        
+                        if (body.type) {
+                            context.commit('setProjectProxy', { 
+                                projectId: proxy.projectId,
+                                proxies: [proxy]
+                            })
+                            resolve()
+                        } else {
+                            reject()
+                        }
+                    })
+                    .catch((error) => {
+                        reject(error)
+                    })
+            }) 
+        },
         fetchProjectProxies(context: ProxyContext, projectId: string): Promise<void> {
             return new Promise((resolve, reject) => {
                 fetch(`${API}/project/${projectId}`)
@@ -104,5 +138,14 @@ const proxy = {
         }
     }
 }
+
+const { read, dispatch } = getStoreAccessors<ProxyState, StoreState>('proxy');
+
+export const projectProxies = read(proxy.getters.getProjectProxies);
+
+export const createProxy = dispatch(proxy.actions.createProxy);
+export const fetchProjectProxies = dispatch(proxy.actions.fetchProjectProxies);
+export const updateQuery = dispatch(proxy.actions.updateQuery);
+export const deleteQuery = dispatch(proxy.actions.deleteQuery);
 
 export default proxy;
