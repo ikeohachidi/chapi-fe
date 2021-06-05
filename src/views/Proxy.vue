@@ -7,8 +7,15 @@
                     A Good proxy name will help for easy identification later.
                 </p>
             </div>
-            <div>
+            <div class="flex flex-col">
                 <input placeholder="Proxy Name" v-model="proxy.name" class="w-full">
+                <button 
+                    class="mt-4 ml-auto"
+                    :disabled="_proxyCheck.name == proxy.name"
+                    @click="updateProxyName"
+                >
+                    Save
+                </button>
             </div>
         </div>
         <div class="section">
@@ -18,8 +25,14 @@
                     It would be best if your description explains what your proxy does clearly. Proxies created can get out of hand. 
                 </p>
             </div>
-            <div>
-                <textarea class="w-full resize-none" rows="6" placeholder="Proxy Description"></textarea>
+            <div class="flex flex-col">
+                <textarea class="w-full resize-none" rows="6" placeholder="Proxy Description" v-model="proxy.description"></textarea>
+                <button 
+                    class="mt-4 ml-auto"
+                    :disabled="_proxyCheck.description == proxy.description"
+                >
+                    Save
+                </button>
             </div>
         </div>
         <div class="section">
@@ -92,6 +105,11 @@
                 <textarea rows="10" class="w-full font-mono resize-none" onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}">
                 {}
                 </textarea>
+                <button 
+                    class="mt-4 ml-auto"
+                >
+                    Save
+                </button>
             </div>
         </div>
     </section>
