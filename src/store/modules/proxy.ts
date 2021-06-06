@@ -33,6 +33,18 @@ const proxy = {
                 Vue.set(state.projectProxies, project.projectId, project.proxies)
             }
         },
+        updateProxy(state: ProxyState, update: Proxy): void {
+            const projectProxies =  state.projectProxies[update.projectId];
+
+
+            for (let i = 0; i < projectProxies.length; i++) {
+                if (projectProxies[i].id === update.id) {
+                    projectProxies[i] = update;
+
+                    break;
+                }
+            }
+        },
         updateQuery(state: ProxyState, update: ProjectProxyQuery): void {
             const projectProxies =  state.projectProxies[update.projectId];
 
@@ -92,6 +104,22 @@ const proxy = {
                     })
             }) 
         },
+        updateProxy(context: ProxyContext, requestObject: Proxy): Promise<void> {
+            return new Promise((resolve, reject) => {
+                fetch(`${API}/proxy`, {
+                        method: 'PUT',
+                        body: JSON.stringify(requestObject)
+                    })
+                    .then((res) => res.json())
+                    .then(() => {
+                        context.commit('updateProxy', requestObject)
+                        resolve()
+                    })
+                    .catch((error) => {
+                        reject(error)
+                    })
+            })
+        },
         fetchProjectProxies(context: ProxyContext, projectId: string): Promise<void> {
             return new Promise((resolve, reject) => {
                 fetch(`${API}/project/${projectId}`)
@@ -144,6 +172,7 @@ const { read, dispatch } = getStoreAccessors<ProxyState, StoreState>('proxy');
 export const projectProxies = read(proxy.getters.getProjectProxies);
 
 export const createProxy = dispatch(proxy.actions.createProxy);
+export const updateProxy = dispatch(proxy.actions.updateProxy);
 export const fetchProjectProxies = dispatch(proxy.actions.fetchProjectProxies);
 export const updateQuery = dispatch(proxy.actions.updateQuery);
 export const deleteQuery = dispatch(proxy.actions.deleteQuery);

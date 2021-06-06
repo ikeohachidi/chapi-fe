@@ -11,8 +11,8 @@
                 <input placeholder="Proxy Name" v-model="proxy.name" class="w-full">
                 <button 
                     class="mt-4 ml-auto"
-                    :disabled="_proxyCheck.name == proxy.name"
-                    @click="updateProxyName"
+                    :disabled="proxyCheck.name == proxy.name"
+                    @click="updateProxy"
                 >
                     Save
                 </button>
@@ -29,7 +29,8 @@
                 <textarea class="w-full resize-none" rows="6" placeholder="Proxy Description" v-model="proxy.description"></textarea>
                 <button 
                     class="mt-4 ml-auto"
-                    :disabled="_proxyCheck.description == proxy.description"
+                    :disabled="proxyCheck.description == proxy.description"
+                    @click="updateProxy"
                 >
                     Save
                 </button>
@@ -120,11 +121,12 @@ import {Vue, Component} from 'vue-property-decorator';
 
 import ProxyClass, { ProjectProxyQuery, Query } from '@/types/Proxy'
 import { HTTPMethod } from '@/types/HTTP';
+import { updateProxy, updateQuery } from '@/store/modules/proxy';
 
 @Component
 export default class Proxy extends Vue {
     private proxy: ProxyClass = new ProxyClass;
-    private _proxyCheck: ProxyClass = new ProxyClass;
+    private proxyCheck: ProxyClass = new ProxyClass;
 
     get HTTPMethodOptions(): string[] {
         return Object.keys(HTTPMethod)
@@ -139,12 +141,17 @@ export default class Proxy extends Vue {
     }
 
     private hasQueryChanged(index: number): boolean {
-        if (this._proxyCheck.id && this.proxy.id) {
-            return this._proxyCheck.queries[index].name === this.proxy.queries[index].name &&
-                this._proxyCheck.queries[index].value == this.proxy.queries[index].value;
+        if (this.proxyCheck.id && this.proxy.id) {
+            return this.proxyCheck.queries[index].name === this.proxy.queries[index].name &&
+                this.proxyCheck.queries[index].value == this.proxy.queries[index].value;
         }
 
         return false
+    }
+
+    private updateProxy(): void {
+        updateProxy(this.$store, this.proxy)
+            .catch(error => { console.log(error) })
     }
     
     private updateQuery(query: Query): void {
@@ -154,10 +161,8 @@ export default class Proxy extends Vue {
             query
         }
 
-        this.$store.dispatch('proxy/updateQuery', requestObject)
-            .catch((error) => {
-                console.log(error)
-            })
+        updateQuery(this.$store, requestObject)
+            .catch(error => { console.log(error) })
     }
 
     private deleteQuery(query: Query): void {
@@ -182,7 +187,7 @@ export default class Proxy extends Vue {
             for (const proxy of proxies) {
                 if (proxy.id === this.proxyId) {
                     this.proxy = proxy;
-                    this._proxyCheck = JSON.parse(JSON.stringify(proxy));
+                    this.proxyCheck = JSON.parse(JSON.stringify(proxy));
 
 
                     break;
