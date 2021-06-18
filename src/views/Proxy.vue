@@ -48,7 +48,7 @@
                 <select v-model="proxy.method" class="rounded-r-none w-2/12">
                     <option v-for="method in HTTPMethodOptions" :key="method" :value="method" class="uppercase">{{ method }}</option>
                 </select>
-                <input class="rounded-l-none border-l-0 w-10/12" v-model="proxy.chapiURL">
+                <input class="rounded-l-none border-l-0 w-10/12" v-model="proxy.url">
             </div>
         </div>
         <div class="section">
@@ -67,7 +67,7 @@
                             <th></th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody v-if="proxy.queries">
                         <tr v-for="(query, queryIndex) in proxy.queries" :key="queryIndex">
                             <td class="py-2">
                                 <div class="ui input">
@@ -93,6 +93,12 @@
                         </tr>
                     </tbody>
                 </table>
+                <button 
+                    class="mt-4 ml-auto"
+                    @click="addQuery"
+                >
+                    Add Query
+                </button>
             </div>
         </div>
         <div class="section">
@@ -149,8 +155,18 @@ export default class Proxy extends Vue {
         return false
     }
 
+    private addQuery(): void {
+        this.proxy.queries.push({
+            id: '',
+            name: '',
+            value: '',
+            proxyId: this.proxy.id!
+        })
+    }
+
     private updateProxy(): void {
         updateProxy(this.$store, this.proxy)
+            .then(() => { this.proxyCheck = this.proxy })
             .catch(error => { console.log(error) })
     }
     
