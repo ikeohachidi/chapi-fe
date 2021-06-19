@@ -48,6 +48,6 @@ export default class Dashboard extends Vue {}
 
 .right-pane {
     width: 75%;
-    padding: 30px 0;
+    padding: 0 0;
 }
 </style>

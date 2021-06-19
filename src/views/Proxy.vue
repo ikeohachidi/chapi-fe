@@ -1,5 +1,10 @@
 <template>
     <section>
+        <div class="bg-gray-100 flex">
+            <p class="px-8 py-5 font-mono text-sm">
+                {{ `${serverURL}/end/${proxy.chapiURL}` }}
+            </p>
+        </div>
         <div class="section">
             <div>
                 <p class="section-name">Name</p>
@@ -102,12 +107,7 @@
                         </tr>
                     </tbody>
                 </table>
-                <button 
-                    class="mt-4 ml-auto"
-                    @click="addQuery"
-                >
-                    Add Query
-                </button>
+                <button class="mt-4 ml-auto" @click="addQuery">Add Query</button>
             </div>
         </div>
         <div class="section">
@@ -118,11 +118,18 @@
                 </div>
             </div>
             <div>
-                <textarea rows="10" class="w-full font-mono resize-none" onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}">
-                {}
+                <textarea 
+                    rows="10" 
+                    class="w-full font-mono resize-none" 
+                    onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}"
+                    placeholder="{}"
+                    v-model="proxy.requestBody"
+                >
                 </textarea>
                 <button 
-                    class="mt-4 ml-auto"
+                    class="mt-4 ml-auto" 
+                    @click="updateProxy"
+                    :disabled="proxyCheck.requestBody === proxy.requestBody"
                 >
                     Save
                 </button>
@@ -147,12 +154,16 @@ export default class Proxy extends Vue {
         return Object.keys(HTTPMethod)
     }
 
-    get projectId(): string {
-        return this.$route.query['project'] as string;
+    get projectId(): number {
+        return Number(this.$route.query['project']);
     }
 
-    get proxyId(): string {
-        return this.$route.query['proxy'] as string;
+    get proxyId(): number {
+        return Number(this.$route.query['proxy']);
+    }
+
+    get serverURL(): string {
+        return process.env.VUE_APP_SERVER
     }
 
     private hasQueryChanged(index: number): boolean {

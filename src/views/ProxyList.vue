@@ -70,7 +70,7 @@ export default class ProxyList extends Vue {
             name: 'Proxy' ,
             query: {
                 project: String(this.projectId),
-                proxy: proxy ? proxy.id : ''
+                proxy: proxy ? String(proxy.id) : ''
             }
         })
     }
