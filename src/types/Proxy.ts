@@ -1,5 +1,5 @@
 export default class Proxy {
-    id?: string;
+    id?: number;
     name: string;
     description: string;
     url: string;
@@ -10,7 +10,7 @@ export default class Proxy {
     projectId: number;
 
     constructor() {
-        this.id = '';
+        this.id = 0;
         this.name = '';
         this.description = '';
         this.url = '';
@@ -29,10 +29,10 @@ export type AuthorizedURL = {
 }
 
 export type Query = {
-    id: string;
+    id?: number;
     name: string;
     value: string;
-    proxyId: string;
+    proxyId: number;
 }
 
 export type ProjectProxy = {
