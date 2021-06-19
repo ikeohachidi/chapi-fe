@@ -44,11 +44,20 @@
                     <span class="inline-block rounded-sm bg-gray-300 p-1 font-mono">HTTP Method</span> set
                 </p>
             </div>
-            <div>
-                <select v-model="proxy.method" class="rounded-r-none w-2/12">
-                    <option v-for="method in HTTPMethodOptions" :key="method" :value="method" class="uppercase">{{ method }}</option>
-                </select>
-                <input class="rounded-l-none border-l-0 w-10/12" v-model="proxy.url">
+            <div class="flex flex-col">
+                <div>
+                    <select v-model="proxy.method" class="rounded-r-none w-2/12">
+                        <option v-for="method in HTTPMethodOptions" :key="method" :value="method" class="uppercase">{{ method }}</option>
+                    </select>
+                    <input class="rounded-l-none border-l-0 w-10/12" v-model="proxy.url">
+                </div>
+                <button 
+                    class="mt-4 ml-auto"
+                    :disabled="(proxyCheck.url === proxy.url) && (proxyCheck.method === proxy.method)"
+                    @click="updateProxy"
+                >
+                    Save
+                </button>
             </div>
         </div>
         <div class="section">
