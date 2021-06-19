@@ -122,7 +122,7 @@ const proxy = {
                     })
             })
         },
-        fetchProjectProxies(context: ProxyContext, projectId: string): Promise<void> {
+        fetchProjectProxies(context: ProxyContext, projectId: number): Promise<void> {
             return new Promise((resolve, reject) => {
                 fetch(`${API}/project/${projectId}`)
                     .then((res) => res.json())
