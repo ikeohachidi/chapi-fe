@@ -41,7 +41,7 @@ export type ProjectProxy = {
 }
 
 export type ProjectProxyQuery = {
-    projectId: string;
-    proxyId: string;
+    projectId: number;
+    proxyId: number;
     query: Query;
 }

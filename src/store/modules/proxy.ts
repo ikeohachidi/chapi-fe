@@ -1,6 +1,6 @@
 import { ActionContext } from 'vuex';
 import { getStoreAccessors } from 'vuex-typescript';
-import Proxy, { ProjectProxy, ProjectProxyQuery } from '@/types/Proxy';
+import Proxy, { ProjectProxy, ProjectProxyQuery, Query } from '@/types/Proxy';
 import StoreState from '@/store/storeState';
 import Vue from 'vue';
 import { Response } from '@/types/HTTP';
@@ -54,6 +54,8 @@ const proxy = {
 
                     if (queryIndex !== -1) {
                         projectProxies[i].queries[queryIndex] = update.query;
+                    } else {
+                        projectProxies[i].queries.push(update.query)
                     }
 
                     break;
@@ -86,7 +88,7 @@ const proxy = {
                         body: JSON.stringify(proxy)
                     })
                     .then((res) => res.json())
-                    .then((body: Response<string>) => {
+                    .then((body: Response<number>) => {
                         proxy.id = body.data;
                         
                         if (body.type) {
@@ -133,16 +135,18 @@ const proxy = {
                     })
             }) 
         },
-        updateQuery(context: ProxyContext, requestObject: ProjectProxyQuery): Promise<void> {
+        updateQuery(context: ProxyContext, requestObject: ProjectProxyQuery): Promise<Query> {
             return new Promise((resolve, reject) => {
                 fetch(`${API}/query`, {
                         method: 'PUT',
                         body: JSON.stringify(requestObject.query)
                     })
                     .then((res) => res.json())
-                    .then(() => {
+                    .then((body: Response<number>) => {
+                        requestObject.query.id = body.data;
+                        
                         context.commit('updateQuery', requestObject)
-                        resolve()
+                        resolve(requestObject.query)
                     })
                     .catch((error) => {
                         reject(error)
