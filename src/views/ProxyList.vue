@@ -1,5 +1,5 @@
 <template>
-    <section class="px-5 py-5 grid grid-cols-3 gap-5 min-h-full">
+    <section class="px-5 py-5 grid grid-cols-3 grid-rows-3 gap-5 min-h-full">
         <modal
             title="New Proxy"
             description="Please fill in a name for the new proxy"
@@ -11,13 +11,12 @@
             <input type="text" placeholder="chapi.com external api's" class="w-full" v-model="newProxy.name">
             <textarea rows="8" class="mt-5 resize-none w-full" v-model="newProxy.description" placeholder="Proxy Description"></textarea>
         </modal>
-        <div class="w-full rounded-lg border-dashed border-4 flex items-center justify-center h-36" @click="showNewProxyModal = true">
+        <div class="w-full rounded-lg border-dashed border-4 flex items-center justify-center" @click="showNewProxyModal = true">
             <div class="transform scale-150 text-gray-400">
                 <span class="gg-math-plus"></span>
             </div>
         </div>
         <ProxyCard 
-            class="h-36"
             v-for="(proxy, proxyIndex) in projectProxies"
             :key="proxyIndex"
             :proxy="proxy"
