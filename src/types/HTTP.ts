@@ -11,3 +11,8 @@ export type Response<T> = {
     type: boolean;
     data: T;
 }
+
+export type ProxyConfigResult = {
+    data: string;
+    type: boolean;
+}

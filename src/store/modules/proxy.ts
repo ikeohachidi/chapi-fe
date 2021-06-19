@@ -135,6 +135,35 @@ const proxy = {
                     })
             }) 
         },
+        testProxy(context: ProxyContext, serverURL: string): Promise<string> {
+            return new Promise((resolve, reject) => {
+                let isResponseOk = true;
+                fetch(serverURL, {
+                    method: 'GET'
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        isResponseOk = false;
+                    }
+
+                    const contentType = response.headers.get('content-type');
+                    if (!contentType || !contentType.includes('application/json')) {
+                        return response.text();
+                    }
+                    return response.json();
+                })
+                .then(body => {
+                    if (isResponseOk) {
+                        resolve(body)
+                    } else {
+                        reject(body)
+                    }
+                })
+                .catch(error => { 
+                    reject(error)
+                })
+            })
+        },
         updateQuery(context: ProxyContext, requestObject: ProjectProxyQuery): Promise<Query> {
             return new Promise((resolve, reject) => {
                 fetch(`${API}/query`, {
@@ -180,5 +209,6 @@ export const updateProxy = dispatch(proxy.actions.updateProxy);
 export const fetchProjectProxies = dispatch(proxy.actions.fetchProjectProxies);
 export const updateQuery = dispatch(proxy.actions.updateQuery);
 export const deleteQuery = dispatch(proxy.actions.deleteQuery);
+export const testProxy = dispatch(proxy.actions.testProxy);
 
 export default proxy;

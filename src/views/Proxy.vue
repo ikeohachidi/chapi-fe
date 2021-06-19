@@ -1,155 +1,173 @@
 <template>
     <section>
-        <div class="bg-gray-100 flex items-center py-5">
-            <p class="px-8 pb-0 font-mono text-sm">
-                {{ serverURL }}
-            </p>
-            <button class="ml-auto mr-8" @click="testProxy">Test</button>
-        </div>
-        <div class="section">
-            <div>
-                <p class="section-name">Name</p>
-                <p class="section-description">
-                    A Good proxy name will help for easy identification later.
+        <config-test-overlay 
+            v-if="showConfigResult" 
+            :configResult="configTestResult"
+            @close="showConfigResult = false"
+        />
+        <template>
+            <div class="bg-gray-100 flex items-center py-5">
+                <p class="px-8 pb-0 font-mono text-sm">
+                    {{ serverURL }}
                 </p>
+                <button class="ml-auto mr-8" @click="testProxyConfig">Test</button>
             </div>
-            <div class="flex flex-col">
-                <input placeholder="Proxy Name" v-model="proxy.name" class="w-full">
-                <button 
-                    class="mt-4 ml-auto"
-                    :disabled="proxyCheck.name == proxy.name"
-                    @click="updateProxy"
-                >
-                    Save
-                </button>
-            </div>
-        </div>
-        <div class="section">
-            <div>
-                <p class="section-name">Description</p>
-                <p class="section-description">
-                    It would be best if your description explains what your proxy does clearly. Proxies created can get out of hand. 
-                </p>
-            </div>
-            <div class="flex flex-col">
-                <textarea class="w-full resize-none" rows="6" placeholder="Proxy Description" v-model="proxy.description"></textarea>
-                <button 
-                    class="mt-4 ml-auto"
-                    :disabled="proxyCheck.description == proxy.description"
-                    @click="updateProxy"
-                >
-                    Save
-                </button>
-            </div>
-        </div>
-        <div class="section">
-            <div>
-                <p class="section-name">Destination URL</p>
-                <p class="section-description">
-                    Please enter the URL you'd like to make a request to. Make sure you have the right 
-                    <span class="inline-block rounded-sm bg-gray-300 p-1 font-mono">HTTP Method</span> set
-                </p>
-            </div>
-            <div class="flex flex-col">
+            <div class="section">
                 <div>
-                    <select v-model="proxy.method" class="rounded-r-none w-2/12">
-                        <option v-for="method in HTTPMethodOptions" :key="method" :value="method" class="uppercase">{{ method }}</option>
-                    </select>
-                    <input class="rounded-l-none border-l-0 w-10/12" v-model="proxy.url">
+                    <p class="section-name">Name</p>
+                    <p class="section-description">
+                        A Good proxy name will help for easy identification later.
+                    </p>
                 </div>
-                <button 
-                    class="mt-4 ml-auto"
-                    :disabled="(proxyCheck.url === proxy.url) && (proxyCheck.method === proxy.method)"
-                    @click="updateProxy"
-                >
-                    Save
-                </button>
-            </div>
-        </div>
-        <div class="section">
-            <div>
-                <div class="section-name">URL Queries</div>
-                <div class="section-description">
-                    Enter the queries that will be placed on request the URL during the request 
+                <div class="flex flex-col">
+                    <input placeholder="Proxy Name" v-model="proxy.name" class="w-full">
+                    <button 
+                        class="mt-4 ml-auto"
+                        :disabled="proxyCheck.name == proxy.name"
+                        @click="updateProxy"
+                    >
+                        Save
+                    </button>
                 </div>
             </div>
-            <div>
-                <table>
-                    <thead>
-                        <tr class="text-left text-gray-800">
-                            <th class="py-2 pl-3 font-normal">Name</th>
-                            <th class="px-3 font-normal">Value</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody v-if="proxy.queries">
-                        <tr v-for="(query, queryIndex) in proxy.queries" :key="queryIndex">
-                            <td class="py-2 w-2/5">
-                                <div class="ui input">
-                                    <input type="text" v-model="query.name">
-                                </div>
-                            </td>
-                            <td class="px-3 w-2/5">
-                                <div class="ui input">
-                                    <input type="text" v-model="query.value">
-                                </div>
-                            </td>
-                            <td class="w-1/5">
-                                <div class="flex items-center justify-center">
-                                    <button 
-                                        @click="updateQuery(query, queryIndex)"
-                                        :disabled="hasQueryChanged(queryIndex)"
-                                    >
-                                        Update
-                                    </button>
-                                    <span class="gg-trash text-red-600 cursor-pointer mx-4 hover:scale-50" @click="deleteQuery(query)"></span>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <button class="mt-4 ml-auto" @click="addQuery">Add Query</button>
-            </div>
-        </div>
-        <div class="section">
-            <div>
-                <div class="section-name">Request Body</div>
-                <div class="section-description">
-                    You can add a request body to your proxy. Please note that the body should be in a JSON format.
+            <div class="section">
+                <div>
+                    <p class="section-name">Description</p>
+                    <p class="section-description">
+                        It would be best if your description explains what your proxy does clearly. Proxies created can get out of hand. 
+                    </p>
+                </div>
+                <div class="flex flex-col">
+                    <textarea class="w-full resize-none" rows="6" placeholder="Proxy Description" v-model="proxy.description"></textarea>
+                    <button 
+                        class="mt-4 ml-auto"
+                        :disabled="proxyCheck.description == proxy.description"
+                        @click="updateProxy"
+                    >
+                        Save
+                    </button>
                 </div>
             </div>
-            <div>
-                <textarea 
-                    rows="10" 
-                    class="w-full font-mono resize-none" 
-                    onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}"
-                    placeholder="{}"
-                    v-model="proxy.requestBody"
-                >
-                </textarea>
-                <button 
-                    class="mt-4 ml-auto" 
-                    @click="updateProxy"
-                    :disabled="proxyCheck.requestBody === proxy.requestBody"
-                >
-                    Save
-                </button>
+            <div class="section">
+                <div>
+                    <p class="section-name">Destination URL</p>
+                    <p class="section-description">
+                        Please enter the URL you'd like to make a request to. Make sure you have the right 
+                        <span class="inline-block rounded-sm bg-gray-300 p-1 font-mono">HTTP Method</span> set
+                    </p>
+                </div>
+                <div class="flex flex-col">
+                    <div>
+                        <select v-model="proxy.method" class="rounded-r-none w-2/12">
+                            <option v-for="method in HTTPMethodOptions" :key="method" :value="method" class="uppercase">{{ method }}</option>
+                        </select>
+                        <input class="rounded-l-none border-l-0 w-10/12" v-model="proxy.url">
+                    </div>
+                    <button 
+                        class="mt-4 ml-auto"
+                        :disabled="(proxyCheck.url === proxy.url) && (proxyCheck.method === proxy.method)"
+                        @click="updateProxy"
+                    >
+                        Save
+                    </button>
+                </div>
             </div>
-        </div>
+            <div class="section">
+                <div>
+                    <div class="section-name">URL Queries</div>
+                    <div class="section-description">
+                        Enter the queries that will be placed on request the URL during the request 
+                    </div>
+                </div>
+                <div>
+                    <table>
+                        <thead>
+                            <tr class="text-left text-gray-800">
+                                <th class="py-2 pl-3 font-normal">Name</th>
+                                <th class="px-3 font-normal">Value</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody v-if="proxy.queries">
+                            <tr v-for="(query, queryIndex) in proxy.queries" :key="queryIndex">
+                                <td class="py-2 w-2/5">
+                                    <div class="ui input">
+                                        <input type="text" v-model="query.name">
+                                    </div>
+                                </td>
+                                <td class="px-3 w-2/5">
+                                    <div class="ui input">
+                                        <input type="text" v-model="query.value">
+                                    </div>
+                                </td>
+                                <td class="w-1/5">
+                                    <div class="flex items-center justify-center">
+                                        <button 
+                                            @click="updateQuery(query, queryIndex)"
+                                            :disabled="hasQueryChanged(queryIndex)"
+                                        >
+                                            Update
+                                        </button>
+                                        <span class="gg-trash text-red-600 cursor-pointer mx-4 hover:scale-50" @click="deleteQuery(query)"></span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button class="mt-4 ml-auto" @click="addQuery">Add Query</button>
+                </div>
+            </div>
+            <div class="section">
+                <div>
+                    <div class="section-name">Request Body</div>
+                    <div class="section-description">
+                        You can add a request body to your proxy. Please note that the body should be in a JSON format.
+                    </div>
+                </div>
+                <div>
+                    <textarea 
+                        rows="10" 
+                        class="w-full font-mono resize-none" 
+                        onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}"
+                        placeholder="{}"
+                        v-model="proxy.requestBody"
+                    >
+                    </textarea>
+                    <button 
+                        class="mt-4 ml-auto" 
+                        @click="updateProxy"
+                        :disabled="proxyCheck.requestBody === proxy.requestBody"
+                    >
+                        Save
+                    </button>
+                </div>
+            </div>
+        </template>
     </section>
 </template>
 
 <script lang='ts'>
 import {Vue, Component} from 'vue-property-decorator';
 
+import ConfigTestOverlay from '@/components/ConfigTestOverlay/ConfigTestOverlay.vue';
+
 import ProxyClass, { ProjectProxyQuery, Query } from '@/types/Proxy'
 import { HTTPMethod } from '@/types/HTTP';
-import { updateProxy, updateQuery } from '@/store/modules/proxy';
+import { testProxy, updateProxy, updateQuery } from '@/store/modules/proxy';
 
-@Component
+@Component({
+    components: {
+        ConfigTestOverlay
+    }
+})
 export default class Proxy extends Vue {
     private proxy: ProxyClass = new ProxyClass;
     private proxyCheck: ProxyClass = new ProxyClass;
+    private showConfigResult = false;
+    private configTestResult = {
+        data: '',
+        type: false
+    }
 
     get HTTPMethodOptions(): string[] {
         return Object.keys(HTTPMethod)
@@ -176,14 +194,22 @@ export default class Proxy extends Vue {
         return false
     }
 
-    private testProxy() {
-        fetch(this.serverURL, {
-            method: 'GET'
-        })
-        .then(res => res.text())
-        .then(body => {console.log(body)})
-        .catch(error => { console.log(error)})
+    private testProxyConfig() {
+        this.showConfigResult = true;
 
+        testProxy(this.$store, this.serverURL)
+            .then(response => {
+                this.configTestResult = {
+                    data: response,
+                    type: true
+                }
+            })
+            .catch(error => {
+                this.configTestResult = {
+                    data: error,
+                    type: false 
+                }
+            })
     }
 
     private addQuery(): void {

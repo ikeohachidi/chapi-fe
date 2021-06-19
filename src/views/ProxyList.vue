@@ -1,5 +1,5 @@
 <template>
-    <section class="px-5 grid grid-cols-3 gap-5 min-h-full">
+    <section class="px-5 py-5 grid grid-cols-3 gap-5 min-h-full">
         <modal
             title="New Proxy"
             description="Please fill in a name for the new proxy"
