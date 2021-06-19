@@ -156,12 +156,14 @@ export default class Proxy extends Vue {
     }
 
     private addQuery(): void {
-        this.proxy.queries.push({
+        const newQuery = {
             id: '',
             name: '',
             value: '',
             proxyId: this.proxy.id!
-        })
+        }
+        this.proxyCheck.queries.push({ ...newQuery })
+        this.proxy.queries.push({ ...newQuery })
     }
 
     private updateProxy(): void {
@@ -202,7 +204,7 @@ export default class Proxy extends Vue {
 
             for (const proxy of proxies) {
                 if (proxy.id === this.proxyId) {
-                    this.proxy = proxy;
+                    Object.assign(this.proxy, proxy);
                     this.proxyCheck = JSON.parse(JSON.stringify(proxy));
 
 
