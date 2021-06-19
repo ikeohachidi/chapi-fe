@@ -82,7 +82,7 @@
                             <td>
                                 <div class="flex items-center justify-center">
                                     <button 
-                                        @click="updateQuery(query)"
+                                        @click="updateQuery(query, queryIndex)"
                                         :disabled="hasQueryChanged(queryIndex)"
                                     >
                                         Update
@@ -157,7 +157,7 @@ export default class Proxy extends Vue {
 
     private addQuery(): void {
         const newQuery = {
-            id: '',
+            id: 0,
             name: '',
             value: '',
             proxyId: this.proxy.id!
@@ -172,14 +172,21 @@ export default class Proxy extends Vue {
             .catch(error => { console.log(error) })
     }
     
-    private updateQuery(query: Query): void {
+    private updateQuery(query: Query, queryIndex: number): void {
         const requestObject: ProjectProxyQuery = {
             projectId: this.projectId,
             proxyId: this.proxyId,
             query
         }
 
+        if (!requestObject.query.id) {
+            delete requestObject.query.id
+        }
+
         updateQuery(this.$store, requestObject)
+            .then((query: Query) => {
+                this.proxyCheck.queries[queryIndex] = { ...query };
+            })
             .catch(error => { console.log(error) })
     }
 
