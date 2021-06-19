@@ -1,5 +1,5 @@
 <template>
-    <section>
+    <section class="flex flex-col h-full">
         <modal
             title="New Project"
             description="Please fill in a name for your new project"
@@ -24,7 +24,7 @@
             <button class="w-full" @click="showNewProjectModal = true">Create New Project</button>
         </div>
 
-        <ul class="pt-4 px-4">
+        <ul class="pt-4 px-4 overflow-y-auto h-auto">
             <li 
                 v-for="project in projects" 
                 class="px-4 py-3 flex justify-between items-center cursor-pointer"
