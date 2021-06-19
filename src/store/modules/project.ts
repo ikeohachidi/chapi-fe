@@ -47,13 +47,13 @@ const project = {
         }
     },
     actions: {
-        fetchProjects(context: ProjectContext): Promise<void> {
+        fetchProjects(context: ProjectContext): Promise<Project[]> {
             return new Promise((resolve, reject) => {
                 fetch(`${API}/project`)
                     .then((res) => res.json())
                     .then(body => {
                         context.commit('setProjects', body)
-                        resolve()
+                        resolve(body)
                     })
                     .catch((error) => {
                         reject(error)

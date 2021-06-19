@@ -15,7 +15,7 @@
             <input 
                 type="text" 
                 placeholder="Search Projects" 
-                v-model="projectSearch"
+                @input="searchProject"
                 class="w-full"
             >
         </div>
@@ -61,18 +61,30 @@ import Proxy from '@/types/Proxy';
 export default class ProjectNav extends Vue {
     private newProjectName = '';
 
-    private projectSearch = '';
-
     private selectedProject: Project = new Project;
 
     private showNewProjectModal = false;
 
-    get projects(): Project[] {
+    private projects: Project[] = [];
+
+    get projectsCache(): Project[] {
         return projects(this.$store);
     }
 
     get projectProxies(): {[projectId: string]: Proxy[]} {
         return this.$store.state.proxy.projectProxies
+    }
+
+    private searchProject(event: KeyboardEvent): void {
+        const target = event.target as HTMLInputElement;
+
+        if (target) {
+            const { value } = target;
+
+            this.projects = this.projectsCache.filter(project => {
+                return project.name.includes(value);
+            })
+        }
     }
 
     private createNewProject() {
@@ -97,6 +109,11 @@ export default class ProjectNav extends Vue {
     mounted(): void {
         if (this.projects.length === 0) {
             fetchProjects(this.$store)
+                .then((response: Project[]) => {
+                    this.projects = response; 
+                })
+        } else {
+            this.projects = { ...this.projectsCache }
         }
     }
 }
