@@ -1,9 +1,10 @@
 <template>
     <section>
-        <div class="bg-gray-100 flex">
-            <p class="px-8 py-5 font-mono text-sm">
-                {{ `${serverURL}/end/${proxy.chapiURL}` }}
+        <div class="bg-gray-100 flex items-center py-5">
+            <p class="px-8 pb-0 font-mono text-sm">
+                {{ serverURL }}
             </p>
+            <button class="ml-auto mr-8" @click="testProxy">Test</button>
         </div>
         <div class="section">
             <div>
@@ -163,7 +164,7 @@ export default class Proxy extends Vue {
     }
 
     get serverURL(): string {
-        return process.env.VUE_APP_SERVER
+        return `${process.env.VUE_APP_SERVER}/end/${this.proxy.chapiURL}`
     }
 
     private hasQueryChanged(index: number): boolean {
@@ -173,6 +174,16 @@ export default class Proxy extends Vue {
         }
 
         return false
+    }
+
+    private testProxy() {
+        fetch(this.serverURL, {
+            method: 'GET'
+        })
+        .then(res => res.text())
+        .then(body => {console.log(body)})
+        .catch(error => { console.log(error)})
+
     }
 
     private addQuery(): void {
