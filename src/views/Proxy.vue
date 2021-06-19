@@ -154,10 +154,20 @@ import ConfigTestOverlay from '@/components/ConfigTestOverlay/ConfigTestOverlay.
 import ProxyClass, { ProjectProxyQuery, Query } from '@/types/Proxy'
 import { HTTPMethod } from '@/types/HTTP';
 import { testProxy, updateProxy, updateQuery } from '@/store/modules/proxy';
+import { Route, NavigationGuardNext } from 'vue-router';
 
 @Component({
     components: {
         ConfigTestOverlay
+    },
+    beforeRouteEnter: (to: Route, from: Route, next: NavigationGuardNext) => {
+        if (!to.query['project'] || !to.query['proxy']) {
+            next({ path: 'Dashboard' })
+        }
+
+        if (from.name !== 'Dashboard') {
+            next({ name: 'Dashboard' })
+        }
     }
 })
 export default class Proxy extends Vue {
