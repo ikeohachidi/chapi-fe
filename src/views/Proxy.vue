@@ -83,17 +83,17 @@
                     </thead>
                     <tbody v-if="proxy.queries">
                         <tr v-for="(query, queryIndex) in proxy.queries" :key="queryIndex">
-                            <td class="py-2">
+                            <td class="py-2 w-2/5">
                                 <div class="ui input">
                                     <input type="text" v-model="query.name">
                                 </div>
                             </td>
-                            <td class="px-3">
+                            <td class="px-3 w-2/5">
                                 <div class="ui input">
                                     <input type="text" v-model="query.value">
                                 </div>
                             </td>
-                            <td>
+                            <td class="w-1/5">
                                 <div class="flex items-center justify-center">
                                     <button 
                                         @click="updateQuery(query, queryIndex)"
