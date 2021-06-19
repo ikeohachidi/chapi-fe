@@ -165,9 +165,11 @@ import { Route, NavigationGuardNext } from 'vue-router';
             next({ path: 'Dashboard' })
         }
 
-        if (from.name !== 'Dashboard') {
+        if (from.name !== 'Proxies List') {
             next({ name: 'Dashboard' })
         }
+
+        next()
     }
 })
 export default class Proxy extends Vue {
