@@ -217,7 +217,7 @@ export default class Proxy extends Vue {
             id: 0,
             name: '',
             value: '',
-            proxyId: this.proxy.id!
+            proxyId: this.proxy.id as number
         }
         this.proxyCheck.queries.push({ ...newQuery })
         this.proxy.queries.push({ ...newQuery })
