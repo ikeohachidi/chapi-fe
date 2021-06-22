@@ -1,8 +1,8 @@
 <template>
     <section class="py-2 border-b border-gray-200">
         <div class="flex flex-row justify-between px-5">
-            <router-link to="/" tag="span">
-                Chapi
+            <router-link to="/" v-slot="{ navigate }" custom>
+                <span @click="navigate">Chapi</span>
             </router-link>
 
             <ul>
@@ -14,7 +14,7 @@
                     custom
                     v-slot="{ navigate }"
                 >
-                    <li @click="navigate" @keypress.enter="navigate">{{ route.text }}</li>
+                    <li @click="navigate" @keypress.enter="navigate" class="cursor-pointer">{{ route.text }}</li>
                 </router-link>
             </ul>
         </div>
