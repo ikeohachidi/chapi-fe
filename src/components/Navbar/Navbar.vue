@@ -29,8 +29,8 @@ import { Route } from '@/types/Route';
 @Component
 export default class Navbar extends Vue {
     private routes: Route[] = [
-        { link: 'dashboard', text: 'Dashboard' },
-        { link: 'signin', text: 'Sign in' },
+        { link: '/dashboard', text: 'Dashboard' },
+        { link: '/signin', text: 'Sign in' },
     ]
 }
 </script>
