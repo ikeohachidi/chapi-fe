@@ -3,7 +3,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-9 mx-auto text-center">
-                    <h1 class="bo text-lg mb-5">
+                    <h1 class="text-3xl font-bold mb-5">
                         Sign in to Chapi
                     </h1>
                     <p class="flex justify-center">
