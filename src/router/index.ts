@@ -10,6 +10,11 @@ const routes: Array<RouteConfig> = [
     component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue')
   },
   { 
+    path: '/signin', 
+    name: 'Signin', 
+    component: () => import(/* webpackChunkName: "signin" */ '../views/SignIn.vue')
+  },
+  { 
     path: '/dashboard', 
     name: 'Dashboard', 
     component: () => import(/* webpackChunkName: "dashboard" */ '../views/Dashboard.vue'),
@@ -17,12 +22,12 @@ const routes: Array<RouteConfig> = [
       {
         path: 'proxy',
         name: 'Proxy',
-        component: () => import(/* webpackChunkName: "proxy" */ '../views/Proxy.vue'),
+        component: () => import(/* webpackChunkName: "dashboard" */ '../views/Proxy.vue'),
       },
       {
         path: 'proxies-list',
         name: 'Proxies List',
-        component: () => import(/* webpackChunkName: "proxies" */ '../views/ProxyList.vue'),
+        component: () => import(/* webpackChunkName: "dashboard" */ '../views/ProxyList.vue'),
       }
     ]
   },

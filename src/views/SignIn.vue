@@ -3,16 +3,15 @@
         <div class="container">
             <div class="row">
                 <div class="col-9 mx-auto text-center">
-                    <h1 class="fw-bold" style="font-size: 36px; color: var(--text-color-primary)">
+                    <h1 class="bo text-lg mb-5">
                         Sign in to Chapi
                     </h1>
-                    <p class="mt-3" style="font-size: 24px; color: var(--text-color-secondary)">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Gravida augue ultricies varius 
+                    <p class="flex justify-center">
+                        <span @click="gitubAuth" class="flex items-center text-white bg-black py-3 px-4 rounded-full">
+                            <img src="@/assets/github icon.svg" alt="github icon" class="mr-2" style="height: 19px">
+                            Sign in with Github
+                        </span>
                     </p>
-                    <a href="/auth/github" class="special mt-3">
-                        <img src="static/images/github.svg" alt="github icon" class="mr-2" style="height: 21px">
-                        Sign in with Github
-                    </a>
                 </div>
             </div>
         </div>
@@ -22,8 +21,12 @@
 <script lang='ts'>
 import {Vue, Component} from 'vue-property-decorator';
 
+const API = process.env.VUE_APP_SERVER;
+
 @Component
 export default class className extends Vue {
-
+    private gitubAuth() {
+        window.location.href = API + '/auth/github'
+    }
 }
 </script>
