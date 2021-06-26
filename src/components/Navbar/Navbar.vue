@@ -1,21 +1,23 @@
 <template>
     <section class="py-2 border-b border-gray-200">
         <div class="flex flex-row justify-between px-5">
-            <router-link to="/" v-slot="{ navigate }" custom>
-                <span @click="navigate">Chapi</span>
-            </router-link>
+            <span @click="navigate('/')" class="flex items-center">Chapi</span>
 
             <ul>
-                <router-link 
-                    v-for="route in routes" 
-                    :key="route.link"
-                    :to="route.link"
-                    class="px-3"
-                    custom
-                    v-slot="{ navigate }"
-                >
-                    <li @click="navigate" @keypress.enter="navigate" class="cursor-pointer">{{ route.text }}</li>
-                </router-link>
+                <template v-if="user">
+                    <li 
+                        v-for="route in routes" 
+                        :key="route.text" 
+                        @click="navigate(route.link)" 
+                        class="px-3 cursor-pointer flex items-center"
+                    >
+                        {{ route.text }}
+                    </li>
+                    <li><button>Sign out</button></li>
+                </template>
+                <li v-else @click="navigate('/signin')">
+                    Sign in
+                </li>
             </ul>
         </div>
     </section>
@@ -26,12 +28,23 @@ import {Vue, Component} from 'vue-property-decorator';
 
 import { Route } from '@/types/Route';
 
+import { authenticatedUser } from '@/store/modules/user';
+
 @Component
 export default class Navbar extends Vue {
     private routes: Route[] = [
         { link: '/dashboard', text: 'Dashboard' },
-        { link: '/signin', text: 'Sign in' },
     ]
+
+    get user() {
+        return authenticatedUser(this.$store)
+    }
+
+    private navigate(path: string) {
+        if (!this.$route.path.includes(path)) {
+            this.$router.push(path)
+        }
+    }
 }
 </script>
 

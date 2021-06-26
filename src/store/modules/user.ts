@@ -19,6 +19,11 @@ const state: UserState = {
 const userStore = {
     namespaced: true,
     state,
+    getters: {
+        authenticatedUser(state: UserState): User | null {
+            return state.user;
+        }
+    },
     mutations: {
         setUser(state: UserState, user: User) {
             state.user = user;
@@ -44,9 +49,10 @@ const userStore = {
     }
 }
 
-const { dispatch } = getStoreAccessors<UserState, StoreState>('user');
-const { actions } = userStore;
+const { dispatch, read } = getStoreAccessors<UserState, StoreState>('user');
+const { actions, getters } = userStore;
 
+export const authenticatedUser = read(getters.authenticatedUser);
 export const fetchAuthUser = dispatch(actions.fetchAuthUser);
 
 export default userStore;
