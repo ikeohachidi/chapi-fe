@@ -3,8 +3,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
-import { RouteConfig, Route, NavigationGuardNext } from 'vue-router'
-import User from './types/User'
+import { Route, NavigationGuardNext } from 'vue-router'
 
 import './index.css';
 import '@/scss/gg.scss';
@@ -18,13 +17,17 @@ router.beforeEach(async (to: Route, from: Route, next: NavigationGuardNext) => {
       return
     }
 
-    const response = await store.dispatch('user/fetchAuthUser')
-    if (response) {
-      next()
-      return
+    try {
+      const response = await store.dispatch('user/fetchAuthUser')
+      if (response) {
+        next()
+        return
+      }
+    } catch(err) {
+      // TODO: do something with this
     }
 
-    next({ path: from.path })
+    next({ path: from.path || '/' })
     return
   }
 
