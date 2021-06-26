@@ -11,23 +11,18 @@ import '@/scss/gg.scss';
 Vue.config.productionTip = false
 
 router.beforeEach(async (to: Route, from: Route, next: NavigationGuardNext) => {
+  await store.dispatch('user/fetchAuthUser')
+    .catch(error => {
+      //TODO: do something with error
+    })
+
   if (to.meta.requiresAuth) {
     if (store.state.user.user) {
       next();
-      return
+    } else {
+      next({ path: from.path || '' })
     }
 
-    try {
-      const response = await store.dispatch('user/fetchAuthUser')
-      if (response) {
-        next()
-        return
-      }
-    } catch(err) {
-      // TODO: do something with this
-    }
-
-    next({ path: from.path || '/' })
     return
   }
 
