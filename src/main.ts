@@ -12,7 +12,7 @@ Vue.config.productionTip = false
 
 router.beforeEach(async (to: Route, from: Route, next: NavigationGuardNext) => {
   await store.dispatch('user/fetchAuthUser')
-    .catch(error => {
+    .catch(() => {
       //TODO: do something with error
     })
 
