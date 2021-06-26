@@ -49,7 +49,9 @@ import {Vue, Component} from 'vue-property-decorator';
 import Modal from '@/components/Modal/Modal.vue';
 
 import { projects, fetchUserProjects, createProject, deleteProject } from '@/store/modules/project';
+import { authenticatedUser } from '@/store/modules/user';
 
+import User from '@/types/User';
 import Project from '@/types/Project';
 import Proxy from '@/types/Proxy';
 
@@ -66,6 +68,10 @@ export default class ProjectNav extends Vue {
     private showNewProjectModal = false;
 
     private projectSearchText = '';
+
+    get user(): User | null {
+        return authenticatedUser(this.$store)
+    }
 
     get projects(): Project[] {
         return projects(this.$store)
@@ -86,7 +92,12 @@ export default class ProjectNav extends Vue {
     }
 
     private createNewProject() {
-        createProject(this.$store, this.newProjectName)
+        if (this.user) {
+            createProject(this.$store, {
+                name: this.newProjectName,
+                userId: this.user.id
+            })
+        }
     }
 
     private deleteProject(projectId: string) {

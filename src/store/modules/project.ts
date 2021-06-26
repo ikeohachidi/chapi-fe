@@ -61,19 +61,21 @@ const project = {
                 .catch(error => reject(error))
             })
         },
-        createProject(context: ProjectContext, projectName: string): Promise<void> {
+        createProject(context: ProjectContext, project: Project): Promise<void> {
             return new Promise((resolve, reject) => {
                 fetch(`${API}/project`, { 
                         method: 'POST',
                         body: JSON.stringify({
-                            name: projectName
+                            name: project.name,
+                            userId: project.userId 
                         })
                     })
                     .then((res) => res.json())
                     .then((body: Response<string>) => {
                         context.commit('addProject', {
-                            name: projectName,
-                            id: body.data 
+                            id: body.data,
+                            name: project.name,
+                            userId: project.userId
                         })
                         resolve()
                     })
