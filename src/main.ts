@@ -3,10 +3,33 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
+import { RouteConfig, Route, NavigationGuardNext } from 'vue-router'
+import User from './types/User'
+
 import './index.css';
 import '@/scss/gg.scss';
 
 Vue.config.productionTip = false
+
+router.beforeEach(async (to: Route, from: Route, next: NavigationGuardNext) => {
+  if (to.meta.requiresAuth) {
+    if (store.state.user.user) {
+      next();
+      return
+    }
+
+    const response = await store.dispatch('user/fetchAuthUser')
+    if (response) {
+      next()
+      return
+    }
+
+    next({ path: from.path })
+    return
+  }
+
+  next();
+})
 
 new Vue({
   router,
