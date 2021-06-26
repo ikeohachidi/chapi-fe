@@ -13,7 +13,7 @@
                     >
                         {{ route.text }}
                     </li>
-                    <li><button>Sign out</button></li>
+                    <li><button @click="logoutUser">Sign out</button></li>
                 </template>
                 <li v-else @click="navigate('/signin')">
                     Sign in
@@ -28,7 +28,8 @@ import {Vue, Component} from 'vue-property-decorator';
 
 import { Route } from '@/types/Route';
 
-import { authenticatedUser } from '@/store/modules/user';
+import { authenticatedUser, logoutUser } from '@/store/modules/user';
+import User from '@/types/User';
 
 @Component
 export default class Navbar extends Vue {
@@ -36,8 +37,15 @@ export default class Navbar extends Vue {
         { link: '/dashboard', text: 'Dashboard' },
     ]
 
-    get user() {
+    get user(): User | null {
         return authenticatedUser(this.$store)
+    }
+
+    private logoutUser() {
+        logoutUser(this.$store)
+            .then(() => {
+                this.navigate('/')
+            })
     }
 
     private navigate(path: string) {

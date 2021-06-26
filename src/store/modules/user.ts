@@ -25,8 +25,11 @@ const userStore = {
         }
     },
     mutations: {
-        setUser(state: UserState, user: User) {
+        setUser(state: UserState, user: User): void {
             state.user = user;
+        },
+        nullifyUser(state: UserState): void {
+            state.user = null;
         }
     },
     actions: {
@@ -41,9 +44,21 @@ const userStore = {
                     context.commit('setUser', body.data) 
                     resolve(body.data)
                 })
-                .catch(error => {
-                    reject(error)
+                .catch(error => reject(error))
+            })
+        },
+        logoutUser(context: UserContext): Promise<void> {
+            return new Promise<void>((resolve, reject) => {
+                fetch(`${API}/auth/logout`, {
+                    credentials: 'include',
+                    mode: 'cors'
                 })
+                .then(response => response.json())
+                .then(() => {
+                    context.commit('nullifyUser')
+                    resolve()
+                })
+                .catch(error => reject(error))
             })
         }
     }
@@ -54,5 +69,6 @@ const { actions, getters } = userStore;
 
 export const authenticatedUser = read(getters.authenticatedUser);
 export const fetchAuthUser = dispatch(actions.fetchAuthUser);
+export const logoutUser = dispatch(actions.logoutUser);
 
 export default userStore;
