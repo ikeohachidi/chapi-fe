@@ -108,19 +108,14 @@ export default class ProjectNav extends Vue {
 
     mounted(): void {
         if (this.projects.length === 0) {
-            fetchProjects(this.$store)
-                .then((response: Project[]) => {
-                    this.projects = response; 
-
-                    if (response.length > 0) {
-                        this.getProjectProxies(response[0])
-                    }
+            fetchUserProjects(this.$store, '33000146')
+                .then((projects: Project[]) => {
+                    if (projects.length > 0) this.getProjectProxies(this.projects[0])
                 })
-        } else {
-            this.projects = { ...this.projectsCache }
-            if (this.projects.length > 0) {
-                this.getProjectProxies(this.projects[0])
-            }
+        }
+
+        if (this.projects.length > 0) {
+            this.getProjectProxies(this.projects[0])
         }
     }
 }

@@ -47,18 +47,19 @@ const project = {
         }
     },
     actions: {
-        fetchProjects(context: ProjectContext): Promise<Project[]> {
+        fetchUserProjects(context: ProjectContext, userId: string): Promise<Project[]> {
             return new Promise((resolve, reject) => {
-                fetch(`${API}/project`)
-                    .then((res) => res.json())
-                    .then(body => {
-                        context.commit('setProjects', body)
-                        resolve(body)
-                    })
-                    .catch((error) => {
-                        reject(error)
-                    })
-            }) 
+                fetch(`${API}/user/projects/${userId}`, {
+                    credentials: 'include',
+                    mode: 'cors'
+                })
+                .then(response => response.json())
+                .then((body: Response<Project[]>) => {
+                    context.commit('setProjects', body.data)
+                    resolve(body.data)
+                })
+                .catch(error => reject(error))
+            })
         },
         createProject(context: ProjectContext, projectName: string): Promise<void> {
             return new Promise((resolve, reject) => {
@@ -102,7 +103,7 @@ const project = {
 const { read, dispatch } = getStoreAccessors<ProjectState, StoreState>('project');
 
 export const projects = read(project.getters.getProjects);
-export const fetchProjects = dispatch(project.actions.fetchProjects);
+export const fetchUserProjects = dispatch(project.actions.fetchUserProjects);
 export const createProject = dispatch(project.actions.createProject);
 export const deleteProject = dispatch(project.actions.deleteProject);
 
