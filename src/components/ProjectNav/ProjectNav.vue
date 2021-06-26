@@ -15,7 +15,7 @@
             <input 
                 type="text" 
                 placeholder="Search Projects" 
-                @input="searchProject"
+                v-model="projectSearchText"
                 class="w-full"
             >
         </div>
@@ -26,7 +26,7 @@
 
         <ul class="pt-4 px-4 overflow-y-auto h-auto">
             <li 
-                v-for="project in projects" 
+                v-for="project in filteredProjects" 
                 class="px-4 py-3 flex justify-between items-center cursor-pointer"
                 :class="{'active': selectedProject.id === project.id}"
                 :key="project.id"
@@ -48,7 +48,7 @@ import {Vue, Component} from 'vue-property-decorator';
 
 import Modal from '@/components/Modal/Modal.vue';
 
-import { projects, fetchProjects, createProject, deleteProject } from '@/store/modules/project';
+import { projects, fetchUserProjects, createProject, deleteProject } from '@/store/modules/project';
 
 import Project from '@/types/Project';
 import Proxy from '@/types/Proxy';
@@ -65,26 +65,24 @@ export default class ProjectNav extends Vue {
 
     private showNewProjectModal = false;
 
-    private projects: Project[] = [];
+    private projectSearchText = '';
 
-    get projectsCache(): Project[] {
-        return projects(this.$store);
+    get projects(): Project[] {
+        return projects(this.$store)
+    }
+
+    get filteredProjects(): Project[] {
+        if (this.projectSearchText.length === 0) return this.projects;
+
+        return this.projects.filter(project => {
+            return project.name
+                .toLowerCase()
+                .includes(this.projectSearchText.toLowerCase())
+        })
     }
 
     get projectProxies(): {[projectId: string]: Proxy[]} {
         return this.$store.state.proxy.projectProxies
-    }
-
-    private searchProject(event: KeyboardEvent): void {
-        const target = event.target as HTMLInputElement;
-
-        if (target) {
-            const { value } = target;
-
-            this.projects = this.projectsCache.filter(project => {
-                return project.name.includes(value);
-            })
-        }
     }
 
     private createNewProject() {
