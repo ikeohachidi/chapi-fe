@@ -49,9 +49,7 @@ export default class Navbar extends Vue {
     }
 
     private navigate(path: string) {
-        if (!this.$route.path.includes(path)) {
-            this.$router.push(path)
-        }
+        this.$router.push(path)
     }
 }
 </script>
