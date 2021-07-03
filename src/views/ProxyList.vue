@@ -32,7 +32,7 @@ import ProxyCard from '@/components/ProxyCard/ProxyCard.vue';
 import Modal from '@/components/Modal/Modal.vue';
 
 import Proxy from '@/types/Proxy';
-import { createProxy, fetchProjectProxies } from '@/store/modules/proxy';
+import { createProxy, fetchProjectProxies, projectProxies } from '@/store/modules/proxy';
 
 @Component({
     components: {
@@ -49,14 +49,16 @@ export default class ProxyList extends Vue {
     }
     @Watch('projectId')
     onProjectIdChange() {
-        this.getProjectProxies();
+        if (!(this.projectId in projectProxies(this.$store))) {
+            this.getProjectProxies();
+        }
     }
 
     get projectProxies(): Proxy[] {
-        const projectProxies = this.$store.state.proxy.projectProxies;
+        const proxies = projectProxies(this.$store);
 
-        if (this.projectId in projectProxies) {
-            return projectProxies[this.projectId]
+        if (this.projectId in proxies) {
+            return proxies[this.projectId]
         }
 
         return []
