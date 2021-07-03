@@ -13,10 +13,17 @@
                     >
                         {{ route.text }}
                     </li>
-                    <li><button @click="logoutUser">Sign out</button></li>
+                    <li @click="logoutUser">
+                        Sign out
+                    </li>
                 </template>
-                <li v-else @click="navigate('/signin')">
-                    Sign in
+                <li v-else class="relative sign-in">
+                    <span>Sign in</span>
+                    <ul>
+                        <li @click="gitubAuth">
+                            <span>Github</span>
+                        </li>
+                    </ul>
                 </li>
             </ul>
         </div>
@@ -30,6 +37,8 @@ import { Route } from '@/types/Route';
 
 import { authenticatedUser, logoutUser } from '@/store/modules/user';
 import User from '@/types/User';
+
+const API = process.env.VUE_APP_SERVER;
 
 @Component
 export default class Navbar extends Vue {
@@ -48,6 +57,10 @@ export default class Navbar extends Vue {
             })
     }
 
+    private gitubAuth() {
+        window.location.href = API + '/auth/github'
+    }
+
     private navigate(path: string) {
         this.$router.push(path)
     }
@@ -59,5 +72,22 @@ ul {
     display: flex;
     margin-bottom: 0;
     list-style-type: none;
+}
+
+.sign-in {
+    @apply cursor-pointer;
+
+    & ul {
+        @apply absolute -right-1/4 flex flex-col border border-gray-100 rounded-md shadow-md invisible;
+
+        li {
+            @apply transition duration-300 ease-in-out hover:bg-gray-100;
+            @apply whitespace-nowrap px-5 py-2;
+        }
+    }
+
+    &:hover ul {
+        @apply visible;
+    }
 }
 </style>
