@@ -1,19 +1,19 @@
 <template>
 	<section class="font-ibm">
-		<div class="grid grid-cols-2 gap-4 w-11/12 max-w-6xl mx-auto pt-20">
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-11/12 max-w-6xl mx-auto pt-20">
 			<div>
-				<h1 class="text-4xl font-bold mb-10">A simple and painless proxy for you JAMSTACK application</h1>
+				<h1 class="text-2xl md:text-4xl font-bold mb-10">A simple and painless proxy for you JAMSTACK application</h1>
 				<p class="mb-6">Chapi is a simple application aimed at the JAMSTACK or frontend developer who wants to access some api’s but doesn’t want to have to spin up an entire backend to hide API keys or doesn’t want to have to write complex cloud functions. It’s quick and easy to setup and get going!!</p>
 
 				<button>Get started</button>
 			</div>
-			<div>
+			<div class="hidden md:block">
 				<img src="@/assets/landing-page.svg" alt="Landing page" class="h-4/5 ml-auto">
 			</div>
 		</div>
 
-		<div class="w-11/12 max-w-6xl mx-auto">
-			<div class="w-3/5 mb-9">
+		<div class="w-11/12 max-w-6xl mx-auto mt-20 md:mt-0">
+			<div class="md:w-3/5 mb-9">
 				<h1 class="text-3xl font-bold mb-3">Reasons to use</h1>
 				<p>Chapi aims to be as lean and as simple as possible, maybe for a lack of imagination, laziness or just wanting it that way. At the time of writing it’s stable.</p>
 			</div>
@@ -39,8 +39,6 @@
 <script lang='ts'>
 import {Vue, Component} from 'vue-property-decorator';
 
-import Footer from '@/components/Footer/Footer.vue';
-
 @Component
 export default class Home extends Vue {
 }
@@ -52,11 +50,11 @@ p {
 }
 
 .reasons {
-	@apply grid grid-cols-3 gap-9;
+	@apply grid grid-cols-1 md:grid-cols-3 gap-9;
 
 	div {
 		p:first-of-type {
-			@apply font-bold mb-2;
+			@apply text-xl font-bold mb-2;
 		}
 	}
 }
