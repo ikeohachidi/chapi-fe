@@ -1,5 +1,5 @@
 <template>
-	<section class="font-ibm">
+	<section>
 		<div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-11/12 max-w-6xl mx-auto pt-20">
 			<div>
 				<h1 class="text-2xl md:text-4xl font-bold mb-10">A simple and painless proxy for you JAMSTACK application</h1>
@@ -46,7 +46,7 @@ export default class Home extends Vue {
 
 <style lang="scss" scoped>
 p {
-	@apply text-gray-800;
+	@apply text-gray-800 leading-7;
 }
 
 .reasons {

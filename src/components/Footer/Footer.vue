@@ -15,6 +15,6 @@ export default class Footer extends Vue {
 
 <style lang="scss" scoped>
 footer {
-    @apply bg-gray-100 text-gray-700 py-6 mt-9;
+    @apply bg-gray-100 text-gray-700 py-6;
 }
 </style>
