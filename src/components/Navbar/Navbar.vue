@@ -1,6 +1,6 @@
 <template>
-    <section class="py-2 border-b border-gray-200">
-        <div class="flex flex-row justify-between px-5">
+    <section class="py-4">
+        <div class="flex flex-row justify-between w-11/12 max-w-6xl mx-auto">
             <span @click="navigate('/')" class="flex items-center">Chapi</span>
 
             <ul>

@@ -28,3 +28,11 @@ button:disabled {
 button.danger {
     @apply bg-red-500;
 }
+
+.font-ibm {
+    font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.font-dm {
+    font-family: 'dm sans', sans-serif;
+}
