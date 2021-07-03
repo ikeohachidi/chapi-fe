@@ -44,7 +44,7 @@
 </template>
 
 <script lang='ts'>
-import {Vue, Component} from 'vue-property-decorator';
+import {Vue, Component, Watch} from 'vue-property-decorator';
 
 import Modal from '@/components/Modal/Modal.vue';
 
@@ -54,6 +54,7 @@ import { authenticatedUser } from '@/store/modules/user';
 import User from '@/types/User';
 import Project from '@/types/Project';
 import Proxy from '@/types/Proxy';
+import { Route } from 'vue-router';
 
 @Component({
     components: {
@@ -91,6 +92,12 @@ export default class ProjectNav extends Vue {
         return this.$store.state.proxy.projectProxies
     }
 
+    private viewFirstProject() {
+        if (this.projects.length > 0) {
+            this.getProjectProxies(this.projects[0])
+        }
+    }
+
     private createNewProject() {
         if (this.user) {
             createProject(this.$store, {
@@ -115,16 +122,24 @@ export default class ProjectNav extends Vue {
         })
     }
 
+    get route(): Route {
+        return this.$route;
+    }
+    @Watch('route')
+    onRouteChange() {
+        if (this.route.path == '/dashboard') {
+            this.viewFirstProject();
+        }
+    }
+
     mounted(): void {
         if (this.projects.length === 0 && this.user) {
             fetchUserProjects(this.$store, this.user.id)
                 .then((projects: Project[]) => {
-                    if (projects.length > 0) this.getProjectProxies(projects[0])
+                    this.viewFirstProject()
                 })
-        }
-
-        if (this.projects.length > 0) {
-            this.getProjectProxies(this.projects[0])
+        } else {
+            this.viewFirstProject()
         }
     }
 }

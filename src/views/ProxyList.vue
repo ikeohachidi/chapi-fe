@@ -26,7 +26,7 @@
 </template>
 
 <script lang='ts'>
-import {Vue, Component} from 'vue-property-decorator';
+import {Vue, Component, Watch} from 'vue-property-decorator';
 
 import ProxyCard from '@/components/ProxyCard/ProxyCard.vue';
 import Modal from '@/components/Modal/Modal.vue';
@@ -46,6 +46,10 @@ export default class ProxyList extends Vue {
 
     get projectId(): number {
         return Number(this.$route.query['project']);
+    }
+    @Watch('projectId')
+    onProjectIdChange() {
+        this.getProjectProxies();
     }
 
     get projectProxies(): Proxy[] {
