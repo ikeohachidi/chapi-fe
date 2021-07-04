@@ -1,7 +1,9 @@
 <template>
     <section class="py-4">
         <div class="flex flex-row justify-between w-11/12 max-w-6xl mx-auto">
-            <span @click="navigate('/')" class="flex items-center">Chapi</span>
+            <span @click="navigate('/')" class="flex items-center">
+                <img src="@/assets/logo.png" alt="Chapi logo">
+            </span>
 
             <ul>
                 <template v-if="user">
