@@ -1,5 +1,7 @@
+const path = require('path');
+
 module.exports = {
-    assetsDir: 'static',
+    publicPath: '/static',
     productionSourceMap: false,
     pages: {
         index: {
