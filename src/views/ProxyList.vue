@@ -48,7 +48,7 @@ export default class ProxyList extends Vue {
         return Number(this.$route.query['project']);
     }
     @Watch('projectId')
-    onProjectIdChange() {
+    onProjectIdChange(): void {
         if (!(this.projectId in projectProxies(this.$store))) {
             this.getProjectProxies();
         }
