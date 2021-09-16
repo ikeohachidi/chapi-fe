@@ -22,6 +22,13 @@ const userStore = {
     getters: {
         authenticatedUser(state: UserState): User | null {
             return state.user;
+        },
+        isUserAuthenticated(state: UserState): boolean {
+            if (!state.user) {
+                return false;
+            }
+
+            return state.user.id !== 0;
         }
     },
     mutations: {
@@ -35,9 +42,8 @@ const userStore = {
     actions: {
         fetchAuthUser(context: UserContext): Promise<User> {
             return new Promise((resolve, reject) => {
-                fetch(`${API}/user/auth`, {
-                    credentials: 'include',
-                    mode: 'cors'
+                fetch(`${API}/auth/user`, {
+                    credentials: 'include'
                 })
                 .then(response => response.json())
                 .then((body: Response<User>) => {
@@ -68,6 +74,8 @@ const { dispatch, read } = getStoreAccessors<UserState, StoreState>('user');
 const { actions, getters } = userStore;
 
 export const authenticatedUser = read(getters.authenticatedUser);
+export const isUserAuthenticated = read(getters.isUserAuthenticated);
+
 export const fetchAuthUser = dispatch(actions.fetchAuthUser);
 export const logoutUser = dispatch(actions.logoutUser);
 

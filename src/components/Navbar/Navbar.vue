@@ -6,7 +6,7 @@
             </span>
 
             <ul>
-                <template v-if="user">
+                <template v-if="isUserAuthenticated">
                     <li 
                         v-for="route in routes" 
                         :key="route.text" 
@@ -37,8 +37,7 @@ import {Vue, Component} from 'vue-property-decorator';
 
 import { Route } from '@/types/Route';
 
-import { authenticatedUser, logoutUser } from '@/store/modules/user';
-import User from '@/types/User';
+import { logoutUser, isUserAuthenticated } from '@/store/modules/user';
 
 const API = process.env.VUE_APP_SERVER;
 
@@ -48,8 +47,8 @@ export default class Navbar extends Vue {
         { link: '/dashboard', text: 'Dashboard' },
     ]
 
-    get user(): User | null {
-        return authenticatedUser(this.$store)
+    get isUserAuthenticated(): boolean {
+        return isUserAuthenticated(this.$store)
     }
 
     private logoutUser() {

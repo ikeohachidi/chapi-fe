@@ -11,11 +11,6 @@ import '@/scss/gg.scss';
 Vue.config.productionTip = false
 
 router.beforeEach(async (to: Route, from: Route, next: NavigationGuardNext) => {
-  await store.dispatch('user/fetchAuthUser')
-    .catch(() => {
-      //TODO: do something with error
-    })
-
   if (to.meta.requiresAuth) {
     if (store.state.user.user) {
       next();
