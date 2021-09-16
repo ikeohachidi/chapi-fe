@@ -63,12 +63,9 @@ const project = {
         },
         createProject(context: ProjectContext, project: Project): Promise<void> {
             return new Promise((resolve, reject) => {
-                fetch(`${API}/project`, { 
+                fetch(`${API}/project?name=${project.name}`, { 
                         method: 'POST',
-                        body: JSON.stringify({
-                            name: project.name,
-                            userId: project.userId 
-                        })
+                        credentials: 'include'
                     })
                     .then((res) => res.json())
                     .then((body: Response<string>) => {
