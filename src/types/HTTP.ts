@@ -7,8 +7,7 @@ export enum HTTPMethod {
 }
 
 export type Response<T> = {
-    text: string;
-    type: boolean;
+    successful: boolean;
     data: T;
 }
 
