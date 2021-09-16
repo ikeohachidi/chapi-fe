@@ -12,6 +12,8 @@ import { Vue, Component } from 'vue-property-decorator';
 import Navbar from '@/components/Navbar/Navbar.vue';
 import AppFooter from '@/components/Footer/Footer.vue';
 
+import { fetchAuthUser } from '@/store/modules/user';
+
 @Component({
   components: {
     Navbar,
@@ -19,6 +21,8 @@ import AppFooter from '@/components/Footer/Footer.vue';
   }
 })
 export default class App extends Vue {
-
+  created() {
+    fetchAuthUser(this.$store); 
+  }
 }
 </script>
