@@ -134,7 +134,7 @@ export default class ProjectNav extends Vue {
 
     mounted(): void {
         if (this.projects.length === 0 && this.user) {
-            fetchUserProjects(this.$store, this.user.id)
+            fetchUserProjects(this.$store)
                 .then(() => {
                     this.viewFirstProject()
                 })

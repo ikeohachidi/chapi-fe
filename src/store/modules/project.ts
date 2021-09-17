@@ -22,6 +22,15 @@ const project = {
     getters: {
         getProjects(state: ProjectState): Project[] {
             return state.projects;
+        },
+        getProjectById(state: ProjectState) {
+            return ((projectId: number) => {
+                const index = state.projects.findIndex(project => project.id === projectId);
+
+                if (index === -1) return;
+
+                return state.projects[index]
+            })
         }
     },
     mutations: {
@@ -102,6 +111,8 @@ const project = {
 const { read, dispatch } = getStoreAccessors<ProjectState, StoreState>('project');
 
 export const projects = read(project.getters.getProjects);
+export const getProjectById = read(project.getters.getProjectById);
+
 export const fetchUserProjects = dispatch(project.actions.fetchUserProjects);
 export const createProject = dispatch(project.actions.createProject);
 export const deleteProject = dispatch(project.actions.deleteProject);

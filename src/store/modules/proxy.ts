@@ -124,10 +124,10 @@ const proxy = {
         },
         fetchProjectProxies(context: ProxyContext, projectId: number): Promise<void> {
             return new Promise((resolve, reject) => {
-                fetch(`${API}/project/${projectId}`)
+                fetch(`${API}/route/${projectId}`)
                     .then((res) => res.json())
-                    .then(body => {
-                        context.commit('setProjectProxy', { projectId, proxies: body})
+                    .then((body: Response<Proxy>) => {
+                        context.commit('setProjectProxy', { projectId, proxies: body.data})
                         resolve()
                     })
                     .catch((error) => {
