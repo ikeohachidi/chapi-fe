@@ -5,6 +5,7 @@ export default class Proxy {
     url: string;
     chapiURL: string;
     method: string;
+    path: string;
     queries: Query[];
     requestBody: string;
     authorizedURLs: AuthorizedURL[];
@@ -17,6 +18,7 @@ export default class Proxy {
         this.url = '';
         this.chapiURL = '';
         this.method = 'GET';
+        this.path = '';
         this.queries = [];
         this.requestBody = '';
         this.authorizedURLs = [];

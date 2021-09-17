@@ -8,11 +8,11 @@
         <template>
             <div class="bg-gray-100 flex items-center py-5">
                 <p class="px-8 pb-0 font-mono text-sm">
-                    {{ serverURL }}
+                    {{ proxyProject.name }}.{{ siteURL }}{{ proxy.path }}
                 </p>
                 <button class="ml-auto mr-8" @click="testProxyConfig">Test</button>
             </div>
-            <div class="section">
+            <!-- <div class="section">
                 <div>
                     <p class="section-name">Name</p>
                     <p class="section-description">
@@ -47,7 +47,7 @@
                         Save
                     </button>
                 </div>
-            </div>
+            </div> -->
             <div class="section">
                 <div>
                     <p class="section-name">Destination URL</p>
@@ -148,13 +148,15 @@
 
 <script lang='ts'>
 import {Vue, Component} from 'vue-property-decorator';
+import { Route, NavigationGuardNext } from 'vue-router';
 
 import ConfigTestOverlay from '@/components/ConfigTestOverlay/ConfigTestOverlay.vue';
 
 import ProxyClass, { ProjectProxyQuery, Query } from '@/types/Proxy'
 import { HTTPMethod } from '@/types/HTTP';
+import Project from '@/types/Project';
 import { testProxy, updateProxy, updateQuery } from '@/store/modules/proxy';
-import { Route, NavigationGuardNext } from 'vue-router';
+import { getProjectById } from '@/store/modules/project';
 
 @Component({
     components: {
@@ -189,12 +191,16 @@ export default class Proxy extends Vue {
         return Number(this.$route.query['project']);
     }
 
+    get proxyProject(): Project {
+        return getProjectById(this.$store)(this.proxy.projectId) as Project;
+    }
+
     get proxyId(): number {
         return Number(this.$route.query['proxy']);
     }
 
-    get serverURL(): string {
-        return `${process.env.VUE_APP_SERVER}/end/${this.proxy.chapiURL}`
+    get siteURL(): string {
+        return process.env.VUE_APP_SITE_URL
     }
 
     private hasQueryChanged(index: number): boolean {
