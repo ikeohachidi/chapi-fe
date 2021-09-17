@@ -13,7 +13,7 @@
         </modal>
         <div class="w-full rounded-lg border-dashed border-4 flex items-center justify-center" @click="showNewProxyModal = true">
             <div class="transform scale-150 text-gray-400">
-                <span class="gg-math-plus"></span>
+                <i class="ri-add-line"></i>
             </div>
         </div>
         <ProxyCard 
