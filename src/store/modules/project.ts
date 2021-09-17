@@ -49,7 +49,7 @@ const project = {
     actions: {
         fetchUserProjects(context: ProjectContext, userId: string): Promise<Project[]> {
             return new Promise((resolve, reject) => {
-                fetch(`${API}/user/projects/${userId}`, {
+                fetch(`${API}/project`, {
                     credentials: 'include',
                     mode: 'cors'
                 })
