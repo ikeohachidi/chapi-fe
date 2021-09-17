@@ -7,7 +7,6 @@ import 'remixicon/fonts/remixicon.css';
 import { Route, NavigationGuardNext } from 'vue-router';
 
 import './index.css';
-import '@/scss/gg.scss';
 
 Vue.config.productionTip = false
 
