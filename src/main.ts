@@ -1,9 +1,10 @@
-import Vue from 'vue'
-import App from './App.vue'
-import router from './router'
-import store from './store'
+import Vue from 'vue';
+import App from './App.vue';
+import router from './router';
+import store from './store';
+import 'remixicon/fonts/remixicon.css';
 
-import { Route, NavigationGuardNext } from 'vue-router'
+import { Route, NavigationGuardNext } from 'vue-router';
 
 import './index.css';
 import '@/scss/gg.scss';
