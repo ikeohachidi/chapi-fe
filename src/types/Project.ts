@@ -1,12 +1,12 @@
 
 export default class Project {
-    id?: string;
+    id?: number;
     name: string;
-    userId: string;
+    userId: number;
 
     constructor() {
-        this.id = '';
+        this.id = 0;
         this.name = '';
-        this.userId = '';
+        this.userId = 0;
     }
 }

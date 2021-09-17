@@ -31,7 +31,7 @@ const project = {
         addProject(state: ProjectState, project: Project): void {
             state.projects.push(project)
         },
-        deleteProject(state: ProjectState, projectId: string): void {
+        deleteProject(state: ProjectState, projectId: number): void {
             const index = state.projects.findIndex(project => project.id === projectId);
 
             if (index !== -1) {
@@ -47,7 +47,7 @@ const project = {
         }
     },
     actions: {
-        fetchUserProjects(context: ProjectContext, userId: string): Promise<Project[]> {
+        fetchUserProjects(context: ProjectContext): Promise<Project[]> {
             return new Promise((resolve, reject) => {
                 fetch(`${API}/project`, {
                     credentials: 'include',
@@ -81,7 +81,7 @@ const project = {
                     })
             })
         },
-        deleteProject(context: ProjectContext, projectId: string): Promise<void> {
+        deleteProject(context: ProjectContext, projectId: number): Promise<void> {
             return new Promise((resolve, reject) => {
                 fetch(`${API}/project/${projectId}`, {
                         method: 'DELETE'

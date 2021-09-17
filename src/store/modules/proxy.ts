@@ -91,7 +91,7 @@ const proxy = {
                     .then((body: Response<number>) => {
                         proxy.id = body.data;
                         
-                        if (body.type) {
+                        if (body.successful) {
                             context.commit('setProjectProxy', { 
                                 projectId: proxy.projectId,
                                 proxies: [proxy]

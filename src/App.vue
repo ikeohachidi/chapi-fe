@@ -21,7 +21,7 @@ import { fetchAuthUser } from '@/store/modules/user';
   }
 })
 export default class App extends Vue {
-  created() {
+  created(): void {
     fetchAuthUser(this.$store); 
   }
 }

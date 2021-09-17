@@ -107,7 +107,7 @@ export default class ProjectNav extends Vue {
         }
     }
 
-    private deleteProject(projectId: string) {
+    private deleteProject(projectId: number) {
         deleteProject(this.$store, projectId)
     }
 
@@ -117,7 +117,7 @@ export default class ProjectNav extends Vue {
         this.$router.push({ 
             name: 'Proxies List',
             query: {
-                project: project.id
+                project: String(project.id)
             }
         })
     }
@@ -126,7 +126,7 @@ export default class ProjectNav extends Vue {
         return this.$route;
     }
     @Watch('route')
-    onRouteChange() {
+    onRouteChange(): void {
         if (this.route.path == '/dashboard') {
             this.viewFirstProject();
         }
@@ -135,7 +135,7 @@ export default class ProjectNav extends Vue {
     mounted(): void {
         if (this.projects.length === 0 && this.user) {
             fetchUserProjects(this.$store, this.user.id)
-                .then((projects: Project[]) => {
+                .then(() => {
                     this.viewFirstProject()
                 })
         } else {
