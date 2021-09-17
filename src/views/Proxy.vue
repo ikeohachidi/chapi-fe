@@ -58,14 +58,14 @@
                 </div>
                 <div class="flex flex-col">
                     <div>
-                        <select v-model="proxy.method" class="rounded-r-none w-2/12">
+                        <select v-model="proxy.type" class="rounded-r-none w-2/12" style="padding: 10px;">
                             <option v-for="method in HTTPMethodOptions" :key="method" :value="method" class="uppercase">{{ method }}</option>
                         </select>
-                        <input class="rounded-l-none border-l-0 w-10/12" v-model="proxy.url">
+                        <input class="rounded-l-none border-l-0 w-10/12" v-model="proxy.destination">
                     </div>
                     <button 
                         class="mt-4 ml-auto"
-                        :disabled="(proxyCheck.url === proxy.url) && (proxyCheck.method === proxy.method)"
+                        :disabled="(proxyCheck.destination === proxy.destination) && (proxyCheck.type === proxy.type)"
                         @click="updateProxy"
                     >
                         Save
