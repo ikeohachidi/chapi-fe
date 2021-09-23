@@ -29,14 +29,14 @@ export default class Proxy {
 export type AuthorizedURL = {
     id: string;
     url: string;
-    proxyId: string;
+    routeId: string;
 }
 
 export type Query = {
     id?: number;
     name: string;
     value: string;
-    proxyId: number;
+    routeId: number;
 }
 
 export type ProjectProxy = {

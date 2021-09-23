@@ -112,6 +112,30 @@
                                     </div>
                                 </td>
                             </tr>
+                            <tr v-for="(query, queryIndex) in newQueries" :key="`query-${queryIndex}`">
+                                <td class="py-2 w-2/5">
+                                    <div class="ui input">
+                                        <input type="text" v-model="query.name">
+                                    </div>
+                                </td>
+                                <td class="px-3 w-2/5">
+                                    <div class="ui input">
+                                        <input type="text" v-model="query.value">
+                                    </div>
+                                </td>
+                                <td class="w-1/5">
+                                    <div class="flex items-center justify-center">
+                                        <button 
+                                            @click="saveQuery(query, queryIndex)"
+                                        >
+                                            Save 
+                                        </button>
+                                        <span class="text-red-600 cursor-pointer mx-4 hover:scale-50" @click="deleteQuery(query)">
+                                            <i class="ri-close-fill"></i>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                     <button class="mt-4 ml-auto" @click="addQuery">Add Query</button>
@@ -155,7 +179,7 @@ import ConfigTestOverlay from '@/components/ConfigTestOverlay/ConfigTestOverlay.
 import ProxyClass, { ProjectProxyQuery, Query } from '@/types/Proxy'
 import { HTTPMethod } from '@/types/HTTP';
 import Project from '@/types/Project';
-import { testProxy, updateProxy, updateQuery } from '@/store/modules/proxy';
+import { saveQuery, testProxy, updateProxy, updateQuery } from '@/store/modules/proxy';
 import { getProjectById } from '@/store/modules/project';
 
 @Component({
@@ -175,6 +199,7 @@ import { getProjectById } from '@/store/modules/project';
     }
 })
 export default class Proxy extends Vue {
+    private serverURL = '';
     private proxy: ProxyClass = new ProxyClass;
     private proxyCheck: ProxyClass = new ProxyClass;
     private showConfigResult = false;
@@ -182,6 +207,8 @@ export default class Proxy extends Vue {
         data: '',
         type: false
     }
+
+    private newQueries: Query[] = [];
 
     get HTTPMethodOptions(): string[] {
         return Object.keys(HTTPMethod)
@@ -231,20 +258,32 @@ export default class Proxy extends Vue {
     }
 
     private addQuery(): void {
-        const newQuery = {
+        const newQuery: Query = {
             id: 0,
             name: '',
             value: '',
-            proxyId: this.proxy.id as number
+            routeId: this.proxy.id as number
         }
-        this.proxyCheck.queries.push({ ...newQuery })
-        this.proxy.queries.push({ ...newQuery })
+        this.newQueries.push(newQuery);
     }
 
     private updateProxy(): void {
         updateProxy(this.$store, this.proxy)
             .then(() => { this.proxyCheck = this.proxy })
             .catch(error => { console.log(error) })
+    }
+
+    private saveQuery(query: Query) {
+        const requestObject: ProjectProxyQuery = {
+            projectId: this.projectId,
+            proxyId: this.proxyId,
+            query
+        }
+
+        saveQuery(this.$store, requestObject)
+            .then(() => {
+                this.newQueries = [];
+            })
     }
     
     private updateQuery(query: Query, queryIndex: number): void {

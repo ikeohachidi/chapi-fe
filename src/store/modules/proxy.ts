@@ -45,6 +45,15 @@ const proxy = {
                 }
             }
         },
+        addQuery(state: ProxyState, update: ProjectProxyQuery): void {
+            const projectProxies =  state.projectProxies[update.projectId];
+
+            const index = projectProxies.findIndex(proxy => proxy.id === update.proxyId);
+
+            if (index === -1) return;
+
+            projectProxies[index].queries.push(update.query);
+        },
         updateQuery(state: ProxyState, update: ProjectProxyQuery): void {
             const projectProxies =  state.projectProxies[update.projectId];
 
@@ -164,6 +173,28 @@ const proxy = {
                 })
             })
         },
+        saveQuery(context: ProxyContext, requestObject: ProjectProxyQuery): Promise<Query> {
+            return new Promise((resolve, reject) => {
+                fetch(`${API}/query`, {
+                        method: 'POST',
+                        body: JSON.stringify(requestObject.query)
+                    })
+                    .then((res) => res.json())
+                    .then((body: Response<number>) => {
+                        requestObject.query.id = body.data;
+
+                        console.log('body', body);
+                        console.log('data', body.data);
+                        console.log('requestObject', requestObject);
+                        
+                        context.commit('addQuery', requestObject)
+                        resolve(requestObject.query)
+                    })
+                    .catch((error) => {
+                        reject(error)
+                    })
+            })
+        },
         updateQuery(context: ProxyContext, requestObject: ProjectProxyQuery): Promise<Query> {
             return new Promise((resolve, reject) => {
                 fetch(`${API}/query`, {
@@ -207,6 +238,8 @@ export const projectProxies = read(proxy.getters.getProjectProxies);
 export const createProxy = dispatch(proxy.actions.createProxy);
 export const updateProxy = dispatch(proxy.actions.updateProxy);
 export const fetchProjectProxies = dispatch(proxy.actions.fetchProjectProxies);
+
+export const saveQuery = dispatch(proxy.actions.saveQuery);
 export const updateQuery = dispatch(proxy.actions.updateQuery);
 export const deleteQuery = dispatch(proxy.actions.deleteQuery);
 export const testProxy = dispatch(proxy.actions.testProxy);
