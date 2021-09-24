@@ -2,7 +2,6 @@
   <div id="app">
     <navbar/>
     <router-view/>
-    <app-footer/>
   </div>
 </template>
 
@@ -10,14 +9,12 @@
 import { Vue, Component } from 'vue-property-decorator';
 
 import Navbar from '@/components/Navbar/Navbar.vue';
-import AppFooter from '@/components/Footer/Footer.vue';
 
 import { fetchAuthUser } from '@/store/modules/user';
 
 @Component({
   components: {
-    Navbar,
-    AppFooter
+    Navbar
   }
 })
 export default class App extends Vue {
