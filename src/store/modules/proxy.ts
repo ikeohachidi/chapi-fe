@@ -117,7 +117,7 @@ const proxy = {
         },
         updateProxy(context: ProxyContext, requestObject: Proxy): Promise<void> {
             return new Promise((resolve, reject) => {
-                fetch(`${API}/proxy`, {
+                fetch(`${API}/route`, {
                         method: 'PUT',
                         body: JSON.stringify(requestObject)
                     })
