@@ -181,7 +181,7 @@ import ConfigTestOverlay from '@/components/ConfigTestOverlay/ConfigTestOverlay.
 import ProxyClass, { ProjectProxyQuery, Query } from '@/types/Proxy'
 import { HTTPMethod } from '@/types/HTTP';
 import Project from '@/types/Project';
-import { saveQuery, testProxy, updateProxy, updateQuery } from '@/store/modules/proxy';
+import { deleteQuery, saveQuery, testProxy, updateProxy, updateQuery } from '@/store/modules/proxy';
 import { getProjectById } from '@/store/modules/project';
 
 @Component({
@@ -275,12 +275,16 @@ export default class Proxy extends Vue {
             .catch(error => { console.log(error) })
     }
 
-    private saveQuery(query: Query) {
-        const requestObject: ProjectProxyQuery = {
+    private getRequestObject(query: Query): ProjectProxyQuery {
+        return {
             projectId: this.projectId,
             proxyId: this.proxyId,
             query
         }
+    }
+
+    private saveQuery(query: Query) {
+        const requestObject = this.getRequestObject(query)
 
         saveQuery(this.$store, requestObject)
             .then(() => {
@@ -289,11 +293,7 @@ export default class Proxy extends Vue {
     }
     
     private updateQuery(query: Query, queryIndex: number): void {
-        const requestObject: ProjectProxyQuery = {
-            projectId: this.projectId,
-            proxyId: this.proxyId,
-            query
-        }
+        const requestObject = this.getRequestObject(query)
 
         if (!requestObject.query.id) {
             delete requestObject.query.id
@@ -307,16 +307,9 @@ export default class Proxy extends Vue {
     }
 
     private deleteQuery(query: Query): void {
-        const requestObject: ProjectProxyQuery = {
-            projectId: this.projectId,
-            proxyId: this.proxyId,
-            query
-        }
+        const requestObject = this.getRequestObject(query)
 
-        this.$store.dispatch('proxy/deleteQuery', requestObject)
-            .catch((error) => {
-                console.log(error)
-            })
+        deleteQuery(this.$store, requestObject)
     }
 
     mounted(): void {

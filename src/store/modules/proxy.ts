@@ -213,15 +213,20 @@ const proxy = {
                     })
             })
         },
-        deleteQuery(context: ProxyContext, requestObject: ProjectProxyQuery): Promise<void> {
+        deleteQuery(context: ProxyContext, requestObject: ProjectProxyQuery): Promise<string> {
+            console.log('--', requestObject)
+
             return new Promise((resolve, reject) => {
-                fetch(`${API}/query/${requestObject.query.id}`, {
+                fetch(`${API}/query?id=${requestObject.query.id}&route_id=${requestObject.proxyId}`, {
                         method: 'DELETE',
                     })
                     .then((res) => res.json())
-                    .then(() => {
-                        context.commit('removeQuery', requestObject)
-                        resolve()
+                    .then((body: Response<string>) => {
+                        if (body.successful) {
+                            context.commit('removeQuery', requestObject)
+                        }
+
+                        resolve(body.data)
                     })
                     .catch((error) => {
                         reject(error)
