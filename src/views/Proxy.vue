@@ -58,7 +58,7 @@
                 </div>
                 <div class="flex flex-col">
                     <div>
-                        <select v-model="proxy.type" class="rounded-r-none w-2/12" style="padding: 10px;">
+                        <select v-model="proxy.type" class="rounded-r-none w-2/12" style="padding: 10px;" @change="updateProxy">
                             <option v-for="method in HTTPMethodOptions" :key="method" :value="method" class="uppercase">{{ method }}</option>
                         </select>
                         <input class="rounded-l-none border-l-0 w-10/12" v-model="proxy.destination">
@@ -108,7 +108,9 @@
                                         >
                                             Update
                                         </button>
-                                        <span class="gg-trash text-red-600 cursor-pointer mx-4 hover:scale-50" @click="deleteQuery(query)"></span>
+                                        <span class="text-red-600 cursor-pointer mx-4 hover:scale-50" @click="deleteQuery(query)">
+                                            <i class="ri-close-fill"></i>
+                                        </span>
                                     </div>
                                 </td>
                             </tr>
@@ -130,7 +132,7 @@
                                         >
                                             Save 
                                         </button>
-                                        <span class="text-red-600 cursor-pointer mx-4 hover:scale-50" @click="deleteQuery(query)">
+                                        <span class="text-red-600 cursor-pointer mx-4 hover:scale-50" @click="newQueries.splice(queryIndex, 1)">
                                             <i class="ri-close-fill"></i>
                                         </span>
                                     </div>
