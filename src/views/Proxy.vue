@@ -156,13 +156,13 @@
                         class="w-full font-mono resize-none" 
                         onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}"
                         placeholder="{}"
-                        v-model="proxy.requestBody"
+                        v-model="proxy.body"
                     >
                     </textarea>
                     <button 
                         class="mt-4 ml-auto" 
                         @click="updateProxy"
-                        :disabled="proxyCheck.requestBody === proxy.requestBody"
+                        :disabled="proxyCheck.body === proxy.body"
                     >
                         Save
                     </button>

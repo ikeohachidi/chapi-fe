@@ -8,8 +8,8 @@
             @close="showNewProxyModal = false"
             @action="createNewProxy"
         >
-            <input type="text" placeholder="chapi.com external api's" class="w-full" v-model="newProxy.name">
-            <textarea rows="8" class="mt-5 resize-none w-full" v-model="newProxy.description" placeholder="Proxy Description"></textarea>
+            <input type="text" placeholder="chapi.com external api's" class="w-full" v-model="path">
+            <textarea rows="8" class="mt-5 resize-none w-full" v-model="description" placeholder="Proxy Description"></textarea>
         </modal>
         <div class="w-full rounded-lg border-dashed border-4 flex items-center justify-center" @click="showNewProxyModal = true">
             <div class="transform scale-150 text-gray-400">
@@ -31,7 +31,7 @@ import {Vue, Component, Watch} from 'vue-property-decorator';
 import ProxyCard from '@/components/ProxyCard/ProxyCard.vue';
 import Modal from '@/components/Modal/Modal.vue';
 
-import Proxy from '@/types/Proxy';
+import Proxy, { CreateProxyRequest } from '@/types/Proxy';
 import { createProxy, fetchProjectProxies, projectProxies } from '@/store/modules/proxy';
 
 @Component({
@@ -41,7 +41,8 @@ import { createProxy, fetchProjectProxies, projectProxies } from '@/store/module
     }
 })
 export default class ProxyList extends Vue {
-    private newProxy: Proxy = new Proxy; 
+    private path = '';
+    private description = '' ;
     private showNewProxyModal = false;
 
     get projectId(): number {
@@ -65,9 +66,13 @@ export default class ProxyList extends Vue {
     }
 
     private createNewProxy() {
-        this.newProxy.projectId = this.projectId;
+        const proxy: CreateProxyRequest = {
+            projectId: this.projectId,
+            path: this.path,
+            description: this.description
+        }
 
-        createProxy(this.$store, this.newProxy)
+        createProxy(this.$store, proxy)
     }
 
     private goToProxy(proxy: Proxy): void {

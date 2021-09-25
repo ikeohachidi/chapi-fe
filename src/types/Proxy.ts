@@ -7,7 +7,7 @@ export default class Proxy {
     method: string;
     path: string;
     queries: Query[];
-    requestBody: string;
+    body: string;
     authorizedURLs: AuthorizedURL[];
     projectId: number;
 
@@ -20,11 +20,17 @@ export default class Proxy {
         this.method = 'GET';
         this.path = '';
         this.queries = [];
-        this.requestBody = '';
+        this.body = '';
         this.authorizedURLs = [];
         this.projectId = 0;
     }
 }
+
+export type CreateProxyRequest = {
+    projectId: number;
+    path: string;
+    description: string;
+} 
 
 export type AuthorizedURL = {
     id: string;

@@ -1,6 +1,6 @@
 import { ActionContext } from 'vuex';
 import { getStoreAccessors } from 'vuex-typescript';
-import Proxy, { ProjectProxy, ProjectProxyQuery, Query } from '@/types/Proxy';
+import Proxy, { CreateProxyRequest, ProjectProxy, ProjectProxyQuery, Query } from '@/types/Proxy';
 import StoreState from '@/store/storeState';
 import Vue from 'vue';
 import { Response } from '@/types/HTTP';
@@ -88,17 +88,15 @@ const proxy = {
         }
     },
     actions: {
-        createProxy(context: ProxyContext, proxy: Proxy): Promise<void> {
-            delete proxy.id;
+        createProxy(context: ProxyContext, proxy: CreateProxyRequest): Promise<void> {
 
             return new Promise((resolve, reject) => {
-                fetch(`${API}/proxy`, {
+                fetch(`${API}/route`, {
                         method: 'POST',
                         body: JSON.stringify(proxy)
                     })
                     .then((res) => res.json())
                     .then((body: Response<number>) => {
-                        proxy.id = body.data;
                         
                         if (body.successful) {
                             context.commit('setProjectProxy', { 
@@ -182,10 +180,6 @@ const proxy = {
                     .then((res) => res.json())
                     .then((body: Response<number>) => {
                         requestObject.query.id = body.data;
-
-                        console.log('body', body);
-                        console.log('data', body.data);
-                        console.log('requestObject', requestObject);
                         
                         context.commit('addQuery', requestObject)
                         resolve(requestObject.query)
