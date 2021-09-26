@@ -11,7 +11,7 @@
                         v-for="route in routes" 
                         :key="route.text" 
                         @click="navigate(route.link)" 
-                        class="px-3 cursor-pointer flex items-center"
+                        class="px-3 cursor-pointer"
                     >
                         {{ route.text }}
                     </li>
