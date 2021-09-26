@@ -8,46 +8,10 @@
         <template>
             <div class="bg-gray-100 flex items-center py-5">
                 <p class="px-8 pb-0 font-mono text-sm">
-                    {{ routeProject.name }}.{{ siteURL }}{{ route.path }}
+                    {{ serverURL }}
                 </p>
                 <button class="ml-auto mr-8" @click="testRouteConfig">Test</button>
             </div>
-            <!-- <div class="section">
-                <div>
-                    <p class="section-name">Name</p>
-                    <p class="section-description">
-                        A Good route name will help for easy identification later.
-                    </p>
-                </div>
-                <div class="flex flex-col">
-                    <input placeholder="Route Name" v-model="route.name" class="w-full">
-                    <button 
-                        class="mt-4 ml-auto"
-                        :disabled="routeCheck.name == route.name"
-                        @click="updateRoute"
-                    >
-                        Save
-                    </button>
-                </div>
-            </div>
-            <div class="section">
-                <div>
-                    <p class="section-name">Description</p>
-                    <p class="section-description">
-                        It would be best if your description explains what your route does clearly. Proxies created can get out of hand. 
-                    </p>
-                </div>
-                <div class="flex flex-col">
-                    <textarea class="w-full resize-none" rows="6" placeholder="Route Description" v-model="route.description"></textarea>
-                    <button 
-                        class="mt-4 ml-auto"
-                        :disabled="routeCheck.description == route.description"
-                        @click="updateRoute"
-                    >
-                        Save
-                    </button>
-                </div>
-            </div> -->
             <div class="section">
                 <div>
                     <p class="section-name">Destination URL</p>
@@ -159,10 +123,30 @@
                         v-model="route.body"
                     >
                     </textarea>
+                    <div class="flex">
+                        <button 
+                            class="mt-4 ml-auto" 
+                            @click="updateRoute"
+                            :disabled="routeCheck.body === route.body"
+                        >
+                            Save
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="section">
+                <div>
+                    <p class="section-name">Description</p>
+                    <p class="section-description">
+                        It would be best if your description explains what your route does clearly. Proxies created can get out of hand. 
+                    </p>
+                </div>
+                <div class="flex flex-col">
+                    <textarea class="w-full resize-none" rows="6" placeholder="Route Description" v-model="route.description"></textarea>
                     <button 
-                        class="mt-4 ml-auto" 
+                        class="mt-4 ml-auto"
+                        :disabled="routeCheck.description == route.description"
                         @click="updateRoute"
-                        :disabled="routeCheck.body === route.body"
                     >
                         Save
                     </button>
@@ -201,7 +185,6 @@ import { getProjectById } from '@/store/modules/project';
     }
 })
 export default class RouteView extends Vue {
-    private serverURL = '';
     private route: Route = new Route;
     private routeCheck: Route = new Route;
     private showConfigResult = false;
@@ -230,6 +213,10 @@ export default class RouteView extends Vue {
 
     get siteURL(): string {
         return process.env.VUE_APP_SITE_URL
+    }
+
+    get serverURL(): string {
+        return `${this.routeProject.name}.${this.siteURL}${this.route.path}` 
     }
 
     private hasQueryChanged(index: number): boolean {
