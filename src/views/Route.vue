@@ -22,7 +22,7 @@
                 </div>
                 <div class="flex flex-col">
                     <div>
-                        <select v-model="route.type" class="rounded-r-none w-2/12" style="padding: 10px;" @change="updateRoute">
+                        <select v-model="route.type" class="rounded-r-none w-2/12" style="padding: 8px;" @change="updateRoute">
                             <option v-for="method in HTTPMethodOptions" :key="method" :value="method" class="uppercase">{{ method }}</option>
                         </select>
                         <input class="rounded-l-none border-l-0 w-10/12" v-model="route.destination">
