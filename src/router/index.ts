@@ -16,16 +16,16 @@ const routes: Array<RouteConfig> = [
     component: () => import(/* webpackChunkName: "dashboard" */ '../views/Dashboard.vue'),
     children: [
       {
-        path: 'proxy',
-        name: 'Proxy',
+        path: 'route',
+        name: 'Route',
         meta: { requiresAuth: true },
-        component: () => import(/* webpackChunkName: "dashboard" */ '../views/Proxy.vue'),
+        component: () => import(/* webpackChunkName: "dashboard" */ '../views/Route.vue'),
       },
       {
-        path: 'proxies-list',
-        name: 'Proxies List',
+        path: 'routes-list',
+        name: 'Routes List',
         meta: { requiresAuth: true },
-        component: () => import(/* webpackChunkName: "dashboard" */ '../views/ProxyList.vue'),
+        component: () => import(/* webpackChunkName: "dashboard" */ '../views/RouteList.vue'),
       }
     ]
   },

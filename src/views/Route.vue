@@ -8,23 +8,23 @@
         <template>
             <div class="bg-gray-100 flex items-center py-5">
                 <p class="px-8 pb-0 font-mono text-sm">
-                    {{ proxyProject.name }}.{{ siteURL }}{{ proxy.path }}
+                    {{ routeProject.name }}.{{ siteURL }}{{ route.path }}
                 </p>
-                <button class="ml-auto mr-8" @click="testProxyConfig">Test</button>
+                <button class="ml-auto mr-8" @click="testRouteConfig">Test</button>
             </div>
             <!-- <div class="section">
                 <div>
                     <p class="section-name">Name</p>
                     <p class="section-description">
-                        A Good proxy name will help for easy identification later.
+                        A Good route name will help for easy identification later.
                     </p>
                 </div>
                 <div class="flex flex-col">
-                    <input placeholder="Proxy Name" v-model="proxy.name" class="w-full">
+                    <input placeholder="Route Name" v-model="route.name" class="w-full">
                     <button 
                         class="mt-4 ml-auto"
-                        :disabled="proxyCheck.name == proxy.name"
-                        @click="updateProxy"
+                        :disabled="routeCheck.name == route.name"
+                        @click="updateRoute"
                     >
                         Save
                     </button>
@@ -34,15 +34,15 @@
                 <div>
                     <p class="section-name">Description</p>
                     <p class="section-description">
-                        It would be best if your description explains what your proxy does clearly. Proxies created can get out of hand. 
+                        It would be best if your description explains what your route does clearly. Proxies created can get out of hand. 
                     </p>
                 </div>
                 <div class="flex flex-col">
-                    <textarea class="w-full resize-none" rows="6" placeholder="Proxy Description" v-model="proxy.description"></textarea>
+                    <textarea class="w-full resize-none" rows="6" placeholder="Route Description" v-model="route.description"></textarea>
                     <button 
                         class="mt-4 ml-auto"
-                        :disabled="proxyCheck.description == proxy.description"
-                        @click="updateProxy"
+                        :disabled="routeCheck.description == route.description"
+                        @click="updateRoute"
                     >
                         Save
                     </button>
@@ -58,15 +58,15 @@
                 </div>
                 <div class="flex flex-col">
                     <div>
-                        <select v-model="proxy.type" class="rounded-r-none w-2/12" style="padding: 10px;" @change="updateProxy">
+                        <select v-model="route.type" class="rounded-r-none w-2/12" style="padding: 10px;" @change="updateRoute">
                             <option v-for="method in HTTPMethodOptions" :key="method" :value="method" class="uppercase">{{ method }}</option>
                         </select>
-                        <input class="rounded-l-none border-l-0 w-10/12" v-model="proxy.destination">
+                        <input class="rounded-l-none border-l-0 w-10/12" v-model="route.destination">
                     </div>
                     <button 
                         class="mt-4 ml-auto"
-                        :disabled="(proxyCheck.destination === proxy.destination) && (proxyCheck.type === proxy.type)"
-                        @click="updateProxy"
+                        :disabled="(routeCheck.destination === route.destination) && (routeCheck.type === route.type)"
+                        @click="updateRoute"
                     >
                         Save
                     </button>
@@ -88,8 +88,8 @@
                                 <th></th>
                             </tr>
                         </thead>
-                        <tbody v-if="proxy.queries">
-                            <tr v-for="(query, queryIndex) in proxy.queries" :key="queryIndex">
+                        <tbody v-if="route.queries">
+                            <tr v-for="(query, queryIndex) in route.queries" :key="queryIndex">
                                 <td class="py-2 w-2/5">
                                     <div class="ui input">
                                         <input type="text" v-model="query.name">
@@ -147,7 +147,7 @@
                 <div>
                     <div class="section-name">Request Body</div>
                     <div class="section-description">
-                        You can add a request body to your proxy. Please note that the body should be in a JSON format.
+                        You can add a request body to your route. Please note that the body should be in a JSON format.
                     </div>
                 </div>
                 <div>
@@ -156,13 +156,13 @@
                         class="w-full font-mono resize-none" 
                         onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}"
                         placeholder="{}"
-                        v-model="proxy.body"
+                        v-model="route.body"
                     >
                     </textarea>
                     <button 
                         class="mt-4 ml-auto" 
-                        @click="updateProxy"
-                        :disabled="proxyCheck.body === proxy.body"
+                        @click="updateRoute"
+                        :disabled="routeCheck.body === route.body"
                     >
                         Save
                     </button>
@@ -174,36 +174,36 @@
 
 <script lang='ts'>
 import {Vue, Component} from 'vue-property-decorator';
-import { Route, NavigationGuardNext } from 'vue-router';
+import { Route as VueRoute, NavigationGuardNext } from 'vue-router';
 
 import ConfigTestOverlay from '@/components/ConfigTestOverlay/ConfigTestOverlay.vue';
 
-import ProxyClass, { ProjectProxyQuery, Query } from '@/types/Proxy'
+import Route, { ProjectRouteQuery, Query } from '@/types/Route'
 import { HTTPMethod } from '@/types/HTTP';
 import Project from '@/types/Project';
-import { deleteQuery, saveQuery, testProxy, updateProxy, updateQuery } from '@/store/modules/proxy';
+import { deleteQuery, saveQuery, testRoute, updateRoute, updateQuery, projectRoutes } from '@/store/modules/route';
 import { getProjectById } from '@/store/modules/project';
 
 @Component({
     components: {
         ConfigTestOverlay
     },
-    beforeRouteEnter: (to: Route, from: Route, next: NavigationGuardNext) => {
-        if (!to.query['project'] || !to.query['proxy']) {
+    beforeRouteEnter: (to: VueRoute, from: VueRoute, next: NavigationGuardNext) => {
+        if (!to.query['project'] || !to.query['route']) {
             next({ path: 'Dashboard' })
         }
 
-        if (from.name !== 'Proxies List') {
+        if (from.name !== 'Routes List') {
             next({ name: 'Dashboard' })
         }
 
         next()
     }
 })
-export default class Proxy extends Vue {
+export default class RouteView extends Vue {
     private serverURL = '';
-    private proxy: ProxyClass = new ProxyClass;
-    private proxyCheck: ProxyClass = new ProxyClass;
+    private route: Route = new Route;
+    private routeCheck: Route = new Route;
     private showConfigResult = false;
     private configTestResult = {
         data: '',
@@ -220,12 +220,12 @@ export default class Proxy extends Vue {
         return Number(this.$route.query['project']);
     }
 
-    get proxyProject(): Project {
-        return getProjectById(this.$store)(this.proxy.projectId) as Project;
+    get routeProject(): Project {
+        return getProjectById(this.$store)(this.projectId) as Project;
     }
 
-    get proxyId(): number {
-        return Number(this.$route.query['proxy']);
+    get routeId(): number {
+        return Number(this.$route.query['route']);
     }
 
     get siteURL(): string {
@@ -233,18 +233,18 @@ export default class Proxy extends Vue {
     }
 
     private hasQueryChanged(index: number): boolean {
-        if (this.proxyCheck.id && this.proxy.id) {
-            return this.proxyCheck.queries[index].name === this.proxy.queries[index].name &&
-                this.proxyCheck.queries[index].value == this.proxy.queries[index].value;
+        if (this.routeCheck.id && this.route.id) {
+            return this.routeCheck.queries[index].name === this.route.queries[index].name &&
+                this.routeCheck.queries[index].value == this.route.queries[index].value;
         }
 
         return false
     }
 
-    private testProxyConfig() {
+    private testRouteConfig() {
         this.showConfigResult = true;
 
-        testProxy(this.$store, this.serverURL)
+        testRoute(this.$store, this.serverURL)
             .then(response => {
                 this.configTestResult = {
                     data: response,
@@ -264,21 +264,21 @@ export default class Proxy extends Vue {
             id: 0,
             name: '',
             value: '',
-            routeId: this.proxy.id as number
+            routeId: this.route.id as number
         }
         this.newQueries.push(newQuery);
     }
 
-    private updateProxy(): void {
-        updateProxy(this.$store, this.proxy)
-            .then(() => { this.proxyCheck = this.proxy })
+    private updateRoute(): void {
+        updateRoute(this.$store, this.route)
+            .then(() => { this.routeCheck = this.route })
             .catch(error => { console.log(error) })
     }
 
-    private getRequestObject(query: Query): ProjectProxyQuery {
+    private getRequestObject(query: Query): ProjectRouteQuery {
         return {
             projectId: this.projectId,
-            proxyId: this.proxyId,
+            routeId: this.routeId,
             query
         }
     }
@@ -301,7 +301,7 @@ export default class Proxy extends Vue {
 
         updateQuery(this.$store, requestObject)
             .then((query: Query) => {
-                this.proxyCheck.queries[queryIndex] = { ...query };
+                this.routeCheck.queries[queryIndex] = { ...query };
             })
             .catch(error => { console.log(error) })
     }
@@ -313,15 +313,15 @@ export default class Proxy extends Vue {
     }
 
     mounted(): void {
-        const projectsProxies = this.$store.state.proxy.projectProxies;
+        const project = projectRoutes(this.$store)
 
-        if (this.projectId in projectsProxies) {
-            const proxies = projectsProxies[this.projectId] as ProxyClass[];
+        if (this.projectId in project) {
+            const routes = project[this.projectId] as Route[];
 
-            for (const proxy of proxies) {
-                if (proxy.id === this.proxyId) {
-                    Object.assign(this.proxy, proxy);
-                    this.proxyCheck = JSON.parse(JSON.stringify(proxy));
+            for (const route of routes) {
+                if (route.id === this.routeId) {
+                    Object.assign(this.route, route);
+                    this.routeCheck = JSON.parse(JSON.stringify(route));
 
 
                     break;

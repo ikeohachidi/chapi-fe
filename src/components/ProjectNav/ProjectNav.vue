@@ -30,7 +30,7 @@
                 class="px-4 py-2 flex justify-between items-center cursor-pointer"
                 :class="{'active': selectedProject.id === project.id}"
                 :key="project.id"
-                @click="getProjectProxies(project)"
+                @click="getProjectRoutes(project)"
             >
                 <span>{{ project.name }}</span>
                 <span class="inline-block text-xl text-gray-200 hover:text-red-500 transition duration-300" @click="deleteProject(project.id)">
@@ -48,11 +48,12 @@ import Modal from '@/components/Modal/Modal.vue';
 
 import { projects, fetchUserProjects, createProject, deleteProject } from '@/store/modules/project';
 import { authenticatedUser } from '@/store/modules/user';
+import { projectRoutes } from '@/store/modules/route';
 
 import User from '@/types/User';
 import Project from '@/types/Project';
-import Proxy from '@/types/Proxy';
-import { Route } from 'vue-router';
+import Route from '@/types/Route';
+import { Route as VueRoute } from 'vue-router';
 
 @Component({
     components: {
@@ -86,13 +87,13 @@ export default class ProjectNav extends Vue {
         })
     }
 
-    get projectProxies(): {[projectId: string]: Proxy[]} {
-        return this.$store.state.proxy.projectProxies
+    get projectRoutes(): {[projectId: string]: Route[]} {
+        return projectRoutes(this.$store)
     }
 
     private viewFirstProject() {
         if (this.projects.length > 0) {
-            this.getProjectProxies(this.projects[0])
+            this.getProjectRoutes(this.projects[0])
         }
     }
 
@@ -109,18 +110,18 @@ export default class ProjectNav extends Vue {
         deleteProject(this.$store, projectId)
     }
 
-    private getProjectProxies(project: Project) {
+    private getProjectRoutes(project: Project) {
         this.selectedProject = project;
 
         this.$router.push({ 
-            name: 'Proxies List',
+            name: 'Routes List',
             query: {
                 project: String(project.id)
             }
         })
     }
 
-    get route(): Route {
+    get route(): VueRoute {
         return this.$route;
     }
     @Watch('route')

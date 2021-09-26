@@ -1,9 +1,9 @@
 import { ProjectState } from './modules/project';
-import { ProxyState } from './modules/proxy';
+import { RouteState } from './modules/route';
 import { UserState } from './modules/user';
 
 export default interface StoreState {
     project: ProjectState,
-    proxy: ProxyState,
+    route: RouteState,
     user: UserState
 } 

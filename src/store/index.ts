@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import project from './modules/project';
-import proxy from './modules/proxy';
+import route from './modules/route';
 import user from './modules/user';
 import StoreState from './storeState';
 
@@ -12,6 +12,6 @@ export default new Vuex.Store<StoreState>({
   modules: {
     user,
     project,
-    proxy
+    route
   }
 })

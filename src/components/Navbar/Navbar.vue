@@ -35,15 +35,13 @@
 <script lang='ts'>
 import {Vue, Component} from 'vue-property-decorator';
 
-import { Route } from '@/types/Route';
-
 import { logoutUser, isUserAuthenticated } from '@/store/modules/user';
 
 const API = process.env.VUE_APP_SERVER;
 
 @Component
 export default class Navbar extends Vue {
-    private routes: Route[] = [
+    private routes = [
         { link: '/dashboard', text: 'Dashboard' },
     ]
 
