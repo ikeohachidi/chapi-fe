@@ -258,7 +258,9 @@ export default class RouteView extends Vue {
 
     private updateRoute(): void {
         updateRoute(this.$store, this.route)
-            .then(() => { this.routeCheck = this.route })
+            .then(() => {
+                Object.assign(this.routeCheck, this.route)
+            })
             .catch(error => { console.log(error) })
     }
 
