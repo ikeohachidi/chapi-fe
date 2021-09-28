@@ -1,6 +1,6 @@
 <template>
     <div class="rounded-md bg-white border border-gray-200 p-4 hover:shadow-sm duration-75 relative">
-        <p class="uppercase text-gray-400 absolute top-0 left-0 bg-gray-300 py-1 px-3 rounded-br-sm">{{ route.type }}</p>
+        <p class="uppercase text-gray-400 absolute top-0 left-0 bg-gray-300 py-1 px-3 rounded-br-sm">{{ route.method }}</p>
         <div class="flex items-center mt-8">
             <span class="w-7 inline-block text-gray-500">
                 <i class="ri-link"></i>

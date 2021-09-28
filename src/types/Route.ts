@@ -1,9 +1,11 @@
+import { HTTPMethod } from "./HTTP";
+
 export default class Route {
     id?: number;
     name: string;
     description: string;
     url: string;
-    method: string;
+    method: HTTPMethod;
     path: string;
     queries: Query[];
     body: string;
@@ -15,7 +17,7 @@ export default class Route {
         this.name = '';
         this.description = '';
         this.url = '';
-        this.method = 'GET';
+        this.method = HTTPMethod.GET;
         this.path = '';
         this.queries = [];
         this.body = '';
@@ -27,6 +29,7 @@ export default class Route {
 export type CreateRouteRequest = {
     projectId: number;
     path: string;
+    method: string;
     description: string;
 } 
 
