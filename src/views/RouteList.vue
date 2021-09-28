@@ -2,13 +2,19 @@
     <section class="px-5 py-5 grid grid-cols-3 grid-rows-4 gap-5 min-h-full">
         <modal
             title="New Route"
-            description="Please fill in a name for the new route"
+            description="Please configure the base settings for this route"
             actionButtonText="Create Route"
             v-if="showNewRouteModal"
             @close="showNewRouteModal = false"
             @action="createNewRoute"
         >
-            <input type="text" placeholder="chapi.com external api's" class="w-full" v-model="path">
+            <div class="flex">
+                <select v-model="method" class="rounded-r-none w-3/12" style="padding: 8px;">
+                    <option v-for="option in HTTPMethodOptions" :key="option" :value="option">{{ option }}</option>
+                </select>
+                <p class="w-6/12 border mb-0 px-4 text-sm border-l-0 cursor-not-allowed flex items-center overflow-ellipsis border-gray-200" :title="serverURL">{{ serverURL }}</p>
+                <input type="text" placeholder="/users" class="rounded-l-none border-l-0 w-5/12" v-model="path">
+            </div>
             <textarea rows="8" class="mt-5 resize-none w-full" v-model="description" placeholder="Route Description"></textarea>
         </modal>
         <div class="w-full rounded-lg border-dashed border-4 flex items-center justify-center" @click="showNewRouteModal = true">
@@ -32,7 +38,10 @@ import RouteCard from '@/components/RouteCard/RouteCard.vue';
 import Modal from '@/components/Modal/Modal.vue';
 
 import Route, { CreateRouteRequest } from '@/types/Route';
+import { HTTPMethod } from '@/types/HTTP';
+
 import { createRoute, fetchProjectRoutes, projectRoutes } from '@/store/modules/route';
+import { getProjectById } from '@/store/modules/project';
 
 @Component({
     components: {
@@ -43,6 +52,7 @@ import { createRoute, fetchProjectRoutes, projectRoutes } from '@/store/modules/
 export default class RouteList extends Vue {
     private path = '';
     private description = '' ;
+    private method = 'GET';
     private showNewRouteModal = false;
 
     get projectId(): number {
@@ -53,6 +63,16 @@ export default class RouteList extends Vue {
         if (!(this.projectId in projectRoutes(this.$store))) {
             this.getProjectRoutes();
         }
+    }
+
+    get serverURL(): string {
+        const project = getProjectById(this.$store)(this.projectId);
+
+        return `${project ? project.name : ''}.${process.env.VUE_APP_SITE_URL}`;
+    }
+
+    get HTTPMethodOptions(): string[] {
+        return Object.keys(HTTPMethod)
     }
 
     get projectRoutes(): Route[] {
@@ -69,6 +89,7 @@ export default class RouteList extends Vue {
         const route: CreateRouteRequest = {
             projectId: this.projectId,
             path: this.path,
+            method: this.method,
             description: this.description
         }
 
