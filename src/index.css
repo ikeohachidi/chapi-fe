@@ -4,6 +4,7 @@
 
 body {
     font-family: 'dm sans', sans-serif;
+    @apply text-gray-700;
 }
 
 input, 
