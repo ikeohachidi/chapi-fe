@@ -8,7 +8,9 @@
             @close="showNewProjectModal = false"
             @action="createNewProject"
         >
-            <input type="text" placeholder="chapi.com external api's" class="w-full" v-model="newProjectName">
+            <input type="text" placeholder="chapi.com external api's" class="w-full" v-model="newProjectName" @input="isProjectCreated">
+            <p class="text-sm error-text" v-if="projectAlreadyExists">Name isn't available</p>
+            <p class="text-sm error-text" v-if="newProjectName.length < 3">Name should have at least 3 letters</p>
         </modal>
 
         <div class="px-6 py-8 border-b border-gray-200">
@@ -46,7 +48,7 @@ import {Vue, Component, Watch} from 'vue-property-decorator';
 
 import Modal from '@/components/Modal/Modal.vue';
 
-import { projects, fetchUserProjects, createProject, deleteProject } from '@/store/modules/project';
+import { projects, fetchUserProjects, createProject, deleteProject, isProjectCreated } from '@/store/modules/project';
 import { authenticatedUser } from '@/store/modules/user';
 import { projectRoutes } from '@/store/modules/route';
 
@@ -68,6 +70,12 @@ export default class ProjectNav extends Vue {
     private showNewProjectModal = false;
 
     private projectSearchText = '';
+
+    private projectAlreadyExists = false;
+
+    get isInputValid(): boolean {
+        return this.newProjectName.length >= 3 && !this.projectAlreadyExists;
+    }
 
     get user(): User | null {
         return authenticatedUser(this.$store)
@@ -108,6 +116,17 @@ export default class ProjectNav extends Vue {
 
     private deleteProject(projectId: number) {
         deleteProject(this.$store, projectId)
+    }
+
+    private isProjectCreated(event: InputEvent) {
+        const { value } = event.target as HTMLInputElement;
+
+        if (value === '') return;
+
+        isProjectCreated(this.$store, value)
+            .then((doesExist) => {
+                this.projectAlreadyExists = doesExist;
+            })
     }
 
     private getProjectRoutes(project: Project) {

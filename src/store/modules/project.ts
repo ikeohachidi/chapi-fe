@@ -23,11 +23,9 @@ const project = {
         getProjects(state: ProjectState): Project[] {
             return state.projects;
         },
-        getProjectById(state: ProjectState) {
-            return ((projectId: number) => {
+        getProjectById(state: ProjectState): (projectId: number) => Project {
+            return ((projectId: number): Project => {
                 const index = state.projects.findIndex(project => project.id === projectId);
-
-                if (index === -1) return;
 
                 return state.projects[index]
             })
@@ -105,6 +103,24 @@ const project = {
                     })
             })
         },
+        isProjectCreated(context: ProjectContext, projectName: string): Promise<boolean> {
+            return new Promise((resolve, reject) => {
+                fetch(`${API}/project/exists?name=${projectName}`, {
+                        method: 'POST'
+                    })
+                    .then((res) => res.json())
+                    .then((body: Response<boolean>) => {
+                        if (body.successful) {
+                            resolve(body.data)
+                        } else {
+                            reject(body.data)
+                        }
+                    })
+                    .catch((error) => {
+                        reject(error)
+                    })
+            })
+        },
     }
 }
 
@@ -116,5 +132,6 @@ export const getProjectById = read(project.getters.getProjectById);
 export const fetchUserProjects = dispatch(project.actions.fetchUserProjects);
 export const createProject = dispatch(project.actions.createProject);
 export const deleteProject = dispatch(project.actions.deleteProject);
+export const isProjectCreated = dispatch(project.actions.isProjectCreated);
 
 export default project;

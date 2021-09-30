@@ -29,3 +29,7 @@ button:disabled {
 button.danger {
     @apply bg-red-500;
 }
+
+.error-text {
+    @apply text-red-400;
+}
