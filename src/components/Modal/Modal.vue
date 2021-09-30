@@ -11,7 +11,7 @@
 
             <div class="bg-gray-200 py-4 flex justify-end px-4 mt-3">
                 <p @click="close" class="mb-0 py-2 px-3 rounded-md mr-2 text-sm hover:bg-gray-300 cursor-pointer">Close</p>
-                <button @click="actionButtonClicked">{{ actionButtonText }}</button>
+                <button :disabled="!enableOK" @click="actionButtonClicked">{{ actionButtonText }}</button>
             </div>
         </div>
     </section>
@@ -25,6 +25,7 @@ export default class Modal extends Vue {
     @Prop({ default: '' }) title!: string;
     @Prop({ default: '' }) description!: string;
     @Prop({ default: 'Done' }) actionButtonText!: string;
+    @Prop({ default: true }) enableOK!: boolean;
 
     private close() {
         this.$emit('close')

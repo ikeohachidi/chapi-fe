@@ -7,6 +7,7 @@
             v-if="showNewProjectModal"
             @close="showNewProjectModal = false"
             @action="createNewProject"
+            :enableOK="isInputValid"
         >
             <input type="text" placeholder="chapi.com external api's" class="w-full" v-model="newProjectName" @input="isProjectCreated">
             <p class="text-sm error-text" v-if="projectAlreadyExists">Name isn't available</p>
@@ -106,6 +107,8 @@ export default class ProjectNav extends Vue {
     }
 
     private createNewProject() {
+        if (!this.isInputValid) return;
+
         if (this.user) {
             createProject(this.$store, {
                 name: this.newProjectName,
