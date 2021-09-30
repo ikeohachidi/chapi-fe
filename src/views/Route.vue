@@ -6,13 +6,13 @@
             @close="showConfigResult = false"
         />
         <template>
-            <div class="bg-gray-100 flex items-center py-5">
-                <p class="px-8 pb-0 font-mono text-sm">
+            <div class="content-padding bg-gray-100 flex items-center py-5">
+                <p class="pb-0 font-mono text-sm">
                     {{ serverURL }}
                 </p>
-                <button class="ml-auto mr-8" @click="testRouteConfig">Test</button>
+                <button class="ml-auto" @click="testRouteConfig">Test</button>
             </div>
-            <div class="section">
+            <div class="section content-padding">
                 <div>
                     <p class="section-name">Destination URL</p>
                     <p class="section-description">
@@ -36,7 +36,7 @@
                     </button>
                 </div>
             </div>
-            <div class="section">
+            <div class="section content-padding">
                 <div>
                     <div class="section-name">URL Queries</div>
                     <div class="section-description">
@@ -107,7 +107,7 @@
                     <button class="mt-4 ml-auto" @click="addQuery">Add Query</button>
                 </div>
             </div>
-            <div class="section">
+            <div class="section content-padding">
                 <div>
                     <div class="section-name">Request Body</div>
                     <div class="section-description">
@@ -134,7 +134,7 @@
                     </div>
                 </div>
             </div>
-            <div class="section">
+            <div class="section content-padding">
                 <div>
                     <p class="section-name">Description</p>
                     <p class="section-description">
@@ -322,8 +322,12 @@ export default class RouteView extends Vue {
 </script>
 
 <style lang="postcss" scoped>
+.content-padding {
+    @apply px-16 md:px-36;
+}
+
 .section {
-    @apply grid grid-cols-3 gap-5 px-8 py-5 border-b border-gray-200;
+    @apply grid grid-cols-3 gap-5 py-5 border-b border-gray-200;
 }
 
 .section:last-of-type {
