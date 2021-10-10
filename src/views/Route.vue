@@ -13,7 +13,7 @@
             <button class="ml-auto" @click="testRouteConfig">Test</button>
         </div>
 
-        <tabs>
+        <tabs position="center">
             <tab title="Request">
                 <request :projectId="projectId" :route="route"/>
             </tab>

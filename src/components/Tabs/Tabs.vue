@@ -1,10 +1,12 @@
 <script lang='ts'>
 import Vue, { CreateElement, VNode } from 'vue';
-import { Component } from 'vue-property-decorator';
+import { Component, Prop } from 'vue-property-decorator';
 import { TabProps } from './Tab.vue';
 
 @Component
 export default class Tabs extends Vue {
+    @Prop({ default: 'left' }) position!: string;
+
     private activeTabTitle = '';
 
     get defaultSlots(): VNode[] {
@@ -30,7 +32,11 @@ export default class Tabs extends Vue {
                 createElement(
                     'div', 
                     {
-                        class: ['tab-headers']
+                        class: {
+                            'tab-headers': true,
+                            'justify-center': this.position === 'center',
+                            'justify-end': this.position === 'right'
+                        }
                     },
                     this.defaultSlots.map(slot => {
                         const tabProps = (slot.componentOptions?.propsData as TabProps);
