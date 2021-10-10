@@ -48,7 +48,7 @@ export default class Tabs extends Vue {
                                         })
                                     }
                                 },
-                                [slot]
+                                [tabProps.title]
                             )
                     })
                 ),
