@@ -139,7 +139,7 @@ export default class Request extends Vue {
 
     @Watch('route', { deep: true, immediate: true })
     onRouteChange(value: Route): void {
-        Object.assign(this.routeUpdate, value)
+        Object.assign(this.routeUpdate, { ...value })
     }
 
     private routeUpdate = new Route;
