@@ -48,6 +48,7 @@ export default class Dashboard extends Vue {}
 }
 
 .right-pane {
+    width: 75%;
     flex-grow: 1;
     padding: 0 0;
 }
