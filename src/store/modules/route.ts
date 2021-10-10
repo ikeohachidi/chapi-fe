@@ -234,6 +234,10 @@ const route = {
 
 const { read, dispatch } = getStoreAccessors<RouteState, StoreState>('route');
 
+/**
+ * key value pair with projectId as key and array 
+ * of routes as value
+ */
 export const projectRoutes = read(route.getters.getProjectRoutes);
 
 export const createRoute = dispatch(route.actions.createRoute);
