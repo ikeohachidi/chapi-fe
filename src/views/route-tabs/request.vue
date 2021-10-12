@@ -54,38 +54,14 @@
                             </td>
                             <td class="w-1/5">
                                 <div class="flex items-center justify-center">
-                                    <button 
-                                        @click="updateQuery(query, queryIndex)"
-                                        :disabled="hasQueryChanged(queryIndex)"
-                                    >
+                                    <button @click="updateQuery(query, queryIndex)" :disabled="hasQueryChanged(queryIndex)" v-if="query.id > 0">
                                         Update
                                     </button>
-                                    <span class="text-red-600 cursor-pointer mx-4 hover:scale-50" @click="deleteQuery(query)">
-                                        <i class="ri-close-fill"></i>
-                                    </span>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr v-for="(query, queryIndex) in newQueries" :key="`query-${queryIndex}`">
-                            <td class="py-2 w-2/5">
-                                <div class="ui input">
-                                    <input type="text" v-model="query.name">
-                                </div>
-                            </td>
-                            <td class="px-3 w-2/5">
-                                <div class="ui input">
-                                    <input type="text" v-model="query.value">
-                                </div>
-                            </td>
-                            <td class="w-1/5">
-                                <div class="flex items-center justify-center">
-                                    <button 
-                                        @click="saveQuery(query, queryIndex)"
-                                    >
+                                    <button @click="saveQuery(query, queryIndex)" v-else>
                                         Save 
                                     </button>
-                                    <span class="text-red-600 cursor-pointer mx-4 hover:scale-50" @click="newQueries.splice(queryIndex, 1)">
-                                        <i class="ri-close-fill"></i>
+                                    <span class="text-red-600 cursor-pointer mx-4 hover:scale-50" @click="deleteQuery(query)">
+                                        <i class="ri-delete-bin-line"></i>
                                     </span>
                                 </div>
                             </td>
@@ -142,9 +118,8 @@ export default class Request extends Vue {
         Object.assign(this.routeUpdate, { ...value })
     }
 
+    // routeUpdate holds the input values bound on the page
     private routeUpdate = new Route;
-    // TODO: remove dependence this property
-    private newQueries: Query[] = [];
 
     get HTTPMethodOptions(): string[] {
         return Object.keys(HTTPMethod)
@@ -157,7 +132,7 @@ export default class Request extends Vue {
             value: '',
             routeId: this.route.id as number
         }
-        this.newQueries.push(newQuery);
+        this.routeUpdate.queries.push(newQuery)
     }
 
     private updateRequest() {
@@ -182,12 +157,12 @@ export default class Request extends Vue {
         }
     }
 
-    private saveQuery(query: Query) {
+    private saveQuery(query: Query, index: number) {
         const requestObject = this.getRequestObject(query)
 
         saveQuery(this.$store, requestObject)
             .then(() => {
-                this.newQueries = [];
+                this.route.queries.splice(index, 1)
             })
     }
     
