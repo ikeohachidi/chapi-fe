@@ -32,7 +32,7 @@
                 </div>
             </div>
             <div>
-                <table>
+                <table class="w-full">
                     <thead>
                         <tr class="text-left text-gray-800">
                             <th class="py-2 pl-3 font-normal">Name</th>
@@ -43,24 +43,20 @@
                     <tbody v-if="route.queries">
                         <tr v-for="(query, queryIndex) in routeUpdate.queries" :key="queryIndex">
                             <td class="py-2 w-2/5">
-                                <div class="ui input">
-                                    <input type="text" v-model="query.name">
-                                </div>
+                                <input class="w-full" type="text" v-model="query.name">
                             </td>
                             <td class="px-3 w-2/5">
-                                <div class="ui input">
-                                    <input type="text" v-model="query.value">
-                                </div>
+                                <input class="w-full" type="text" v-model="query.value">
                             </td>
                             <td class="w-1/5">
-                                <div class="flex items-center justify-center">
+                                <div class="flex items-center justify-end">
                                     <button @click="updateQuery(query, queryIndex)" :disabled="hasQueryChanged(queryIndex)" v-if="query.id > 0">
                                         Update
                                     </button>
                                     <button @click="saveQuery(query, queryIndex)" v-else>
                                         Save 
                                     </button>
-                                    <span class="text-red-600 cursor-pointer mx-4 hover:scale-50" @click="deleteQuery(query)">
+                                    <span class="text-red-600 cursor-pointer ml-4 hover:scale-50" @click="deleteQuery(query)">
                                         <i class="ri-delete-bin-line"></i>
                                     </span>
                                 </div>
