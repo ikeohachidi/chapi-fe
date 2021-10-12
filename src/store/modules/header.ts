@@ -20,13 +20,9 @@ const header = {
     namespaced: true,
     state,
     getters: {
-        getRouteHeaders(state: HeaderState): (routeId: number) => Header {
+        getRouteHeaders(state: HeaderState): (routeId: number) => Header[] {
             return ((routeId: number) => {
-                const index = state.headers.findIndex(header => header.routeId === routeId);
-
-                if (index === -1) return HeaderDefault;
-
-                return state.headers[index]
+                return state.headers.filter(header => header.routeId === routeId);
             })
         }
     },
