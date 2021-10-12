@@ -28,7 +28,7 @@
             <div>
                 <div class="section-name">URL Queries</div>
                 <div class="section-description">
-                    Enter the queries that will be placed on request the URL during the request 
+                    Enter the queries that will be placed on the request URL 
                 </div>
             </div>
             <div>
@@ -69,6 +69,50 @@
         </div>
         <div class="section content-padding">
             <div>
+                <div class="section-name">Headers</div>
+                <div class="section-description">
+                    <p>Enter HTTP headers that will be added to your request during execution.</p>
+                    <p class="font-bold text-indigo-700">Eg. Bearer-Token: xx-xx-xx</p>
+                </div>
+            </div>
+            <div>
+                <table class="w-full">
+                    <thead>
+                        <tr class="text-left text-gray-800">
+                            <th class="py-2 pl-3 font-normal">Name</th>
+                            <th class="px-3 font-normal">Value</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(header, headerIndex) in routeHeaders" :key="headerIndex">
+                            <td class="py-2 w-2/5">
+                                <input class="w-full" type="text" v-model="header.name">
+                            </td>
+                            <td class="px-3 w-2/5">
+                                <input class="w-full" type="text" v-model="header.value">
+                            </td>
+                            <td class="w-1/5">
+                                <div class="flex items-center justify-end">
+                                    <button @click="updateHeader(header, headerIndex)" :disabled="hasHeaderChanged(headerIndex)" v-if="header.id > 0">
+                                        Update
+                                    </button>
+                                    <button @click="saveHeader(header, headerIndex)" v-else>
+                                        Save 
+                                    </button>
+                                    <span class="text-red-600 cursor-pointer ml-4 hover:scale-50" @click="deleteHeader(header)">
+                                        <i class="ri-delete-bin-line"></i>
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button class="mt-4 ml-auto" @click="addHeader">Add Header</button>
+            </div>
+        </div>
+        <div class="section content-padding">
+            <div>
                 <div class="section-name">Request Body</div>
                 <div class="section-description">
                     You can add a request body to your route. Please note that the body should be in a JSON format.
@@ -103,6 +147,8 @@ import {Vue, Component, Prop, Watch} from 'vue-property-decorator';
 import Route, { ProjectRouteQuery, Query } from '@/types/Route';
 import { HTTPMethod } from '@/types/HTTP';
 import { deleteQuery, saveQuery, updateQuery, updateRoute } from '@/store/modules/route';
+import { deleteHeader, fetchRouteHeaders, getHeaders, saveHeader, updateHeader } from '@/store/modules/header';
+import Header from '@/types/Header';
 
 @Component
 export default class Request extends Vue {
@@ -112,6 +158,11 @@ export default class Request extends Vue {
     @Watch('route', { deep: true, immediate: true })
     onRouteChange(value: Route): void {
         Object.assign(this.routeUpdate, { ...value })
+
+        if (this._routeHeaders.length === 0 && this.route.id) {
+            fetchRouteHeaders(this.$store, this.route.id)
+                .catch((error) => { console.log(error) })
+        }
     }
 
     // routeUpdate holds the input values bound on the page
@@ -121,14 +172,34 @@ export default class Request extends Vue {
         return Object.keys(HTTPMethod)
     }
 
+    private routeHeaders: Header[] = [];
+    get _routeHeaders(): Header[] {
+        if (this.route.id) {
+            return getHeaders(this.$store).filter(header => header.routeId === this.route.id)
+        }
+
+        return []
+    }
+    @Watch('_routeHeaders', { deep: true })
+    on_RouteHeadersChange() {
+        this.routeHeaders = JSON.parse(JSON.stringify(this._routeHeaders))
+    }
+
     private addQuery(): void {
-        const newQuery: Query = {
+        this.routeUpdate.queries.push({
             id: 0,
             name: '',
             value: '',
             routeId: this.route.id as number
-        }
-        this.routeUpdate.queries.push(newQuery)
+        })
+    }
+
+    private addHeader(): void {
+        this.routeHeaders.push({
+            routeId: this.route.id,
+            name: '',
+            value: ''
+        })
     }
 
     private updateRequest() {
@@ -143,6 +214,15 @@ export default class Request extends Vue {
         }
 
         return false
+    }
+
+    private hasHeaderChanged(index: number): boolean {
+        const _header = this._routeHeaders[index];
+        const header = this.routeHeaders[index];
+
+        if (header.name === _header.name && header.value === _header.value) return true;
+
+        return false;
     }
 
     private getRequestObject(query: Query): ProjectRouteQuery {
@@ -180,6 +260,27 @@ export default class Request extends Vue {
         const requestObject = this.getRequestObject(query)
 
         deleteQuery(this.$store, requestObject)
+    }
+
+    private saveHeader(header: Header) {
+        saveHeader(this.$store, {
+                ...header,
+                routeId: this.route.id,
+            })
+            .catch(error => { console.error(error) })
+    }
+
+    private updateHeader(header: Header) {
+        updateHeader(this.$store, {
+                ...header,
+                routeId: this.route.id,
+            })
+            .catch(error => { console.error(error) })
+    }
+
+    private deleteHeader(header: Header) {
+        deleteHeader(this.$store, header)
+            .catch(error => { console.error(error) })
     }
 }
 </script>
