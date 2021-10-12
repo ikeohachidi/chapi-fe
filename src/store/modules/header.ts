@@ -25,11 +25,15 @@ const header = {
         }
     },
     mutations: {
-        setHeaders(state: HeaderState, headers: Header[]): void {
-            state.headers = headers;
-        },
         addHeader(state: HeaderState, header: Header): void {
             state.headers.push(header);
+        },
+        updateHeader(state: HeaderState, update: Header): void {
+            const index = state.headers.findIndex(header => header.id === update.id)
+
+            if (index === -1) return;
+
+            Object.assign(state.headers[index], update)
         },
         deleteHeader(state: HeaderState, headerId: number): void {
             const index = state.headers.findIndex(header => header.id === headerId);
@@ -60,15 +64,37 @@ const header = {
                 .catch(error => reject(error))
             })
         },
-        saveHeader(context: HeaderContext, header: Header): Promise<void> {
+        saveHeader(context: HeaderContext, header: Header): Promise<number> {
             return new Promise((resolve, reject) => {
                 fetch(`${API}/header?route=${header.routeId}`, { 
                         method: 'POST',
-                        credentials: 'include'
+                        credentials: 'include',
+                        body: JSON.stringify(header)
+                    })
+                    .then((res) => res.json())
+                    .then((body: Response<number>) => {
+                        context.commit('addHeader', {
+                            id: body.data,
+                            ...header,
+                        })
+
+                        resolve(body.data)
+                    })
+                    .catch((error) => {
+                        reject(error)
+                    })
+            })
+        },
+        updateHeader(context: HeaderContext, header: Header): Promise<void> {
+            return new Promise((resolve, reject) => {
+                fetch(`${API}/header?route=${header.routeId}`, { 
+                        method: 'PUT',
+                        credentials: 'include',
+                        body: JSON.stringify(header)
                     })
                     .then((res) => res.json())
                     .then((body: Response<string>) => {
-                        context.commit('addHeader', {
+                        context.commit('updateHeader', {
                             id: body.data,
                             ...header,
                         })
@@ -105,6 +131,7 @@ export const getHeaders = read(getters.getHeaders);
 
 export const fetchRouteHeaders = dispatch(actions.fetchRouteHeaders);
 export const saveHeader = dispatch(actions.saveHeader);
+export const updateHeader = dispatch(actions.updateHeader);
 export const deleteHeader = dispatch(actions.deleteHeader);
 
 export default header;
