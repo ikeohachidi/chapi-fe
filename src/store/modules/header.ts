@@ -1,6 +1,6 @@
 import { ActionContext } from 'vuex';
 import { getStoreAccessors } from "vuex-typescript";
-import Header, { HeaderDefault } from '@/types/Header';
+import Header from '@/types/Header';
 import StoreState from '@/store/storeState';
 import { Response } from '@/types/HTTP';
 
@@ -20,10 +20,8 @@ const header = {
     namespaced: true,
     state,
     getters: {
-        getRouteHeaders(state: HeaderState): (routeId: number) => Header[] {
-            return ((routeId: number) => {
-                return state.headers.filter(header => header.routeId === routeId);
-            })
+        getHeaders(state: HeaderState): Header[] {
+            return state.headers;
         }
     },
     mutations: {
@@ -50,7 +48,13 @@ const header = {
                 })
                 .then(response => response.json())
                 .then((body: Response<Header[]>) => {
-                    context.commit('setHeaders', body.data)
+                    body.data.forEach(header => {
+                        context.commit('addHeader', {
+                            routeId,
+                            ...header
+                        })
+                    })
+
                     resolve(body.data)
                 })
                 .catch(error => reject(error))
@@ -97,7 +101,7 @@ const { read, dispatch } = getStoreAccessors<HeaderState, StoreState>('header');
 
 const {actions, getters} = header 
 
-export const getRouteHeaders = read(getters.getRouteHeaders);
+export const getHeaders = read(getters.getHeaders);
 
 export const fetchRouteHeaders = dispatch(actions.fetchRouteHeaders);
 export const saveHeader = dispatch(actions.saveHeader);
