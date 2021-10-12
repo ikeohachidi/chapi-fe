@@ -14,5 +14,6 @@ export default new Vuex.Store<StoreState>({
     user,
     project,
     route,
+    header
   }
 })
