@@ -4,6 +4,7 @@ import Vuex from 'vuex'
 import project from './modules/project';
 import route from './modules/route';
 import user from './modules/user';
+import query from './modules/query';
 import header from './modules/header';
 import StoreState from './storeState';
 
@@ -14,6 +15,7 @@ export default new Vuex.Store<StoreState>({
     user,
     project,
     route,
+    query,
     header
   }
 })

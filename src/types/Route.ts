@@ -41,9 +41,9 @@ export type AuthorizedURL = {
 
 export type Query = {
     id?: number;
+    routeId: number;
     name: string;
     value: string;
-    routeId: number;
 }
 
 export type ProjectRoute = {
