@@ -39,7 +39,7 @@ button.danger {
 }
 
 .section {
-    @apply grid grid-cols-3 gap-5 py-5 border-b border-gray-200;
+    @apply grid grid-cols-3 gap-5 py-7 border-b border-gray-200;
 }
 
 .section:last-of-type {
