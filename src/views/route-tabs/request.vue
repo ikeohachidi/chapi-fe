@@ -175,15 +175,6 @@ export default class Request extends Vue {
         }
     }
 
-    private routeQueries: Query[] = [];
-    get _routeQueries(): Query[] {
-        return getQueries(this.$store).filter(query => query.routeId === this.route.id)
-    }
-    @Watch('_routeQueries', { deep: true })
-    on_RouteQueriesChange(): void {
-        this.routeQueries = JSON.parse(JSON.stringify(this._routeQueries));
-    }
-
     // routeUpdate holds the input values bound on the page
     private routeUpdate = new Route;
 
@@ -191,11 +182,20 @@ export default class Request extends Vue {
         return Object.keys(HTTPMethod)
     }
 
+    private routeQueries: Query[] = [];
+    get _routeQueries(): Query[] {
+        return getQueries(this.$store).filter(query => query.routeId === this.route.id)
+    }
+    @Watch('_routeQueries', { deep: true, immediate: true })
+    on_RouteQueriesChange(): void {
+        this.routeQueries = JSON.parse(JSON.stringify(this._routeQueries));
+    }
+
     private routeHeaders: Header[] = [];
     get _routeHeaders(): Header[] {
         return getHeaders(this.$store).filter(header => header.routeId === this.route.id)
     }
-    @Watch('_routeHeaders', { deep: true })
+    @Watch('_routeHeaders', { deep: true, immediate: true})
     on_RouteHeadersChange(): void {
         this.routeHeaders = JSON.parse(JSON.stringify(this._routeHeaders))
     }
