@@ -50,10 +50,10 @@
                             </td>
                             <td class="w-1/5">
                                 <div class="flex items-center justify-end">
-                                    <button @click="updateQuery(query, queryIndex)" :disabled="hasQueryChanged(queryIndex)" v-if="query.id > 0">
+                                    <button @click="updateQuery(query)" :disabled="hasQueryChanged(queryIndex)" v-if="query.id > 0">
                                         Update
                                     </button>
-                                    <button @click="saveQuery(query, queryIndex)" v-else>
+                                    <button @click="saveQuery(query)" v-else>
                                         Save 
                                     </button>
                                     <span class="text-red-600 cursor-pointer ml-4 hover:scale-50" @click="deleteQuery(query)">
@@ -94,10 +94,10 @@
                             </td>
                             <td class="w-1/5">
                                 <div class="flex items-center justify-end">
-                                    <button @click="updateHeader(header, headerIndex)" :disabled="hasHeaderChanged(headerIndex)" v-if="header.id > 0">
+                                    <button @click="updateHeader(header)" :disabled="hasHeaderChanged(headerIndex)" v-if="header.id > 0">
                                         Update
                                     </button>
-                                    <button @click="saveHeader(header, headerIndex)" v-else>
+                                    <button @click="saveHeader(header)" v-else>
                                         Save 
                                     </button>
                                     <span class="text-red-600 cursor-pointer ml-4 hover:scale-50" @click="deleteHeader(header)">
@@ -144,7 +144,7 @@
 <script lang='ts'>
 import {Vue, Component, Prop, Watch} from 'vue-property-decorator';
 
-import Route, { ProjectRouteQuery, Query } from '@/types/Route';
+import Route, { Query } from '@/types/Route';
 import { HTTPMethod } from '@/types/HTTP';
 import Header from '@/types/Header';
 
@@ -240,12 +240,12 @@ export default class Request extends Vue {
         return false;
     }
 
-    private saveQuery(query: Query, index: number) {
+    private saveQuery(query: Query): void {
         saveQuery(this.$store, query)
             .catch(error => { console.log(error) })
     }
     
-    private updateQuery(query: Query, queryIndex: number): void {
+    private updateQuery(query: Query): void {
         updateQuery(this.$store, query)
             .catch(error => { console.log(error) })
     }

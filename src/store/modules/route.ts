@@ -1,6 +1,6 @@
 import { ActionContext } from 'vuex';
 import { getStoreAccessors } from 'vuex-typescript';
-import Route, { CreateRouteRequest, ProjectRoute, ProjectRouteQuery, Query } from '@/types/Route';
+import Route, { CreateRouteRequest, ProjectRoute, ProjectRouteQuery } from '@/types/Route';
 import StoreState from '@/store/storeState';
 import Vue from 'vue';
 import { Response } from '@/types/HTTP';

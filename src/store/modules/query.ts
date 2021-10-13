@@ -1,7 +1,6 @@
 import { Query } from "@/types/Route";
 import { ActionContext } from 'vuex';
 import { getStoreAccessors } from "vuex-typescript";
-import Header from '@/types/Header';
 import StoreState from '@/store/storeState';
 import { Response } from '@/types/HTTP';
 
