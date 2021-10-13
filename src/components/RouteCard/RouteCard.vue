@@ -11,8 +11,13 @@
             <span class="w-7 inline-block text-gray-500">
                 <i class="ri-focus-3-line"></i>
             </span>
-            <p class="text-gray-900">{{ route.destination }}</p>
+            <p class="text-gray-900 w-full">{{ route.destination }}</p>
         </div>
+        <p class="font-bold text-sm mt-4">DESCRIPTION</p>
+        <p class="text-gray-900 w-full">
+            <template v-if="route.description">{{ route.description }}</template>
+            <template v-else>No description provided for this route.</template>
+        </p>
     </div>
 </template>
 
