@@ -51,7 +51,7 @@ import Modal from '@/components/Modal/Modal.vue';
 
 import { projects, fetchUserProjects, createProject, deleteProject, isProjectCreated } from '@/store/modules/project';
 import { authenticatedUser } from '@/store/modules/user';
-import { projectRoutes } from '@/store/modules/route';
+import { getRoutes } from '@/store/modules/route';
 
 import User from '@/types/User';
 import Project from '@/types/Project';
@@ -96,8 +96,8 @@ export default class ProjectNav extends Vue {
         })
     }
 
-    get projectRoutes(): {[projectId: string]: Route[]} {
-        return projectRoutes(this.$store)
+    get projectRoutes(): Route[] {
+        return getRoutes(this.$store)
     }
 
     private viewFirstProject() {

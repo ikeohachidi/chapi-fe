@@ -32,7 +32,7 @@
 </template>
 
 <script lang='ts'>
-import {Vue, Component, Watch} from 'vue-property-decorator';
+import {Vue, Component} from 'vue-property-decorator';
 
 import RouteCard from '@/components/RouteCard/RouteCard.vue';
 import Modal from '@/components/Modal/Modal.vue';
@@ -40,7 +40,7 @@ import Modal from '@/components/Modal/Modal.vue';
 import Route, { CreateRouteRequest } from '@/types/Route';
 import { HTTPMethod } from '@/types/HTTP';
 
-import { createRoute, fetchProjectRoutes, projectRoutes } from '@/store/modules/route';
+import { createRoute, fetchProjectRoutes, getRoutes } from '@/store/modules/route';
 import { getProjectById } from '@/store/modules/project';
 
 @Component({
@@ -58,12 +58,6 @@ export default class RouteList extends Vue {
     get projectId(): number {
         return Number(this.$route.query['project']);
     }
-    @Watch('projectId')
-    onProjectIdChange(): void {
-        if (!(this.projectId in projectRoutes(this.$store))) {
-            this.getProjectRoutes();
-        }
-    }
 
     get serverURL(): string {
         const project = getProjectById(this.$store)(this.projectId);
@@ -76,13 +70,7 @@ export default class RouteList extends Vue {
     }
 
     get projectRoutes(): Route[] {
-        const routes = projectRoutes(this.$store);
-
-        if (this.projectId in routes) {
-            return routes[this.projectId]
-        }
-
-        return []
+        return getRoutes(this.$store).filter(route => route.projectId === this.projectId)
     }
 
     private createNewRoute() {
@@ -106,7 +94,7 @@ export default class RouteList extends Vue {
         })
     }
 
-    private getProjectRoutes(): void {
+    private fetchProjectRoutes(): void {
         fetchProjectRoutes(this.$store, this.projectId)
             .catch(error => {
                 window.console.log(error)
@@ -115,7 +103,7 @@ export default class RouteList extends Vue {
 
     mounted(): void {
         if (this.projectRoutes.length === 0) {
-            this.getProjectRoutes()
+            this.fetchProjectRoutes()
         }
     }
 }

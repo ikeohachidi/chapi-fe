@@ -45,7 +45,7 @@ import Request from './route-tabs/request.vue'
 
 import Route from '@/types/Route'
 import Project from '@/types/Project';
-import { testRoute, projectRoutes } from '@/store/modules/route';
+import { testRoute, getRoutes, fetchProjectRoutes } from '@/store/modules/route';
 import { getProjectById } from '@/store/modules/project';
 
 @Component({
@@ -68,11 +68,20 @@ import { getProjectById } from '@/store/modules/project';
     }
 })
 export default class RouteView extends Vue {
-    private route: Route = new Route;
     private showConfigResult = false;
     private configTestResult = {
         data: '',
         type: false
+    }
+
+    get route(): Route | null {
+        const routes = getRoutes(this.$store);
+
+        const index = routes.findIndex(route => route.id === this.routeIdQuery)
+
+        if (index === -1) return null;
+
+        return routes[index]
     }
 
     get projectId(): number {
@@ -83,7 +92,7 @@ export default class RouteView extends Vue {
         return getProjectById(this.$store)(this.projectId) as Project;
     }
 
-    get routeId(): number {
+    get routeIdQuery(): number {
         return Number(this.$route.query['route']);
     }
 
@@ -92,7 +101,10 @@ export default class RouteView extends Vue {
     }
 
     get serverURL(): string {
-        return `${this.routeProject.name}.${this.siteURL}${this.route.path}` 
+        if (this.route) {
+            return `${this.routeProject.name}.${this.siteURL}${this.route.path}`;
+        }
+        return '';
     }
 
     private testRouteConfig() {
@@ -114,18 +126,8 @@ export default class RouteView extends Vue {
     }
 
     mounted(): void {
-        const project = projectRoutes(this.$store)
-
-        if (this.projectId in project) {
-            const routes = project[this.projectId] as Route[];
-
-            for (const route of routes) {
-                if (route.id === this.routeId) {
-                    Object.assign(this.route, route);
-
-                    break;
-                }
-            }
+        if (this.route === null) {
+            fetchProjectRoutes(this.$store, this.projectId)
         }
     }
 }
