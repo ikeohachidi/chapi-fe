@@ -67,6 +67,7 @@ const query = {
         },
         saveQuery(context: QueryContext, query: Query): Promise<number> {
             return new Promise((resolve, reject) => {
+                console.log(query)
                 fetch(`${API}/query?route=${query.routeId}`, { 
                         method: 'POST',
                         credentials: 'include',
@@ -74,9 +75,9 @@ const query = {
                     })
                     .then((res) => res.json())
                     .then((body: Response<number>) => {
-                        context.commit('addquery', {
-                            id: body.data,
+                        context.commit('addQuery', {
                             ...query,
+                            id: body.data,
                         })
 
                         resolve(body.data)
@@ -95,9 +96,9 @@ const query = {
                     })
                     .then((res) => res.json())
                     .then((body: Response<string>) => {
-                        context.commit('updatequery', {
-                            id: body.data,
+                        context.commit('updateQuery', {
                             ...query,
+                            id: body.data,
                         })
                         resolve()
                     })

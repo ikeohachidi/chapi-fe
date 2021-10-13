@@ -54,8 +54,8 @@ const header = {
                 .then((body: Response<Header[]>) => {
                     body.data.forEach(header => {
                         context.commit('addHeader', {
-                            routeId,
-                            ...header
+                            ...header,
+                            routeId
                         })
                     })
 
@@ -74,8 +74,8 @@ const header = {
                     .then((res) => res.json())
                     .then((body: Response<number>) => {
                         context.commit('addHeader', {
-                            id: body.data,
                             ...header,
+                            id: body.data
                         })
 
                         resolve(body.data)
@@ -95,8 +95,8 @@ const header = {
                     .then((res) => res.json())
                     .then((body: Response<string>) => {
                         context.commit('updateHeader', {
-                            id: body.data,
                             ...header,
+                            id: body.data
                         })
                         resolve()
                     })
