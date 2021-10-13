@@ -172,63 +172,6 @@ const route = {
                 })
             })
         },
-        saveQuery(context: RouteContext, requestObject: ProjectRouteQuery): Promise<Query> {
-            return new Promise((resolve, reject) => {
-                fetch(`${API}/query`, {
-                        method: 'POST',
-                        body: JSON.stringify(requestObject.query)
-                    })
-                    .then((res) => res.json())
-                    .then((body: Response<number>) => {
-                        if (body.successful) {
-                            requestObject.query.id = body.data;
-                            context.commit('addQuery', requestObject)
-                        }
-                        resolve(requestObject.query)
-                    })
-                    .catch((error) => {
-                        reject(error)
-                    })
-            })
-        },
-        updateQuery(context: RouteContext, requestObject: ProjectRouteQuery): Promise<Query> {
-            return new Promise((resolve, reject) => {
-                fetch(`${API}/query`, {
-                        method: 'PUT',
-                        body: JSON.stringify(requestObject.query)
-                    })
-                    .then((res) => res.json())
-                    .then((body: Response<number>) => {
-                        if (body.successful) {
-                            requestObject.query.id = body.data;
-                            context.commit('updateQuery', requestObject)
-                        }
-
-                        resolve(requestObject.query)
-                    })
-                    .catch((error) => {
-                        reject(error)
-                    })
-            })
-        },
-        deleteQuery(context: RouteContext, requestObject: ProjectRouteQuery): Promise<string> {
-            return new Promise((resolve, reject) => {
-                fetch(`${API}/query?id=${requestObject.query.id}&route_id=${requestObject.routeId}`, {
-                        method: 'DELETE',
-                    })
-                    .then((res) => res.json())
-                    .then((body: Response<string>) => {
-                        if (body.successful) {
-                            context.commit('removeQuery', requestObject)
-                        }
-
-                        resolve(body.data)
-                    })
-                    .catch((error) => {
-                        reject(error)
-                    })
-            })
-        }
     }
 }
 
@@ -244,9 +187,6 @@ export const createRoute = dispatch(route.actions.createRoute);
 export const updateRoute = dispatch(route.actions.updateRoute);
 export const fetchProjectRoutes = dispatch(route.actions.fetchProjectRoutes);
 
-export const saveQuery = dispatch(route.actions.saveQuery);
-export const updateQuery = dispatch(route.actions.updateQuery);
-export const deleteQuery = dispatch(route.actions.deleteQuery);
 export const testRoute = dispatch(route.actions.testRoute);
 
 export default route;

@@ -40,8 +40,8 @@
                             <th></th>
                         </tr>
                     </thead>
-                    <tbody v-if="route.queries">
-                        <tr v-for="(query, queryIndex) in routeUpdate.queries" :key="queryIndex">
+                    <tbody>
+                        <tr v-for="(query, queryIndex) in routeQueries" :key="queryIndex">
                             <td class="py-2 w-2/5">
                                 <input class="w-full" type="text" v-model="query.name">
                             </td>
@@ -146,9 +146,12 @@ import {Vue, Component, Prop, Watch} from 'vue-property-decorator';
 
 import Route, { ProjectRouteQuery, Query } from '@/types/Route';
 import { HTTPMethod } from '@/types/HTTP';
-import { deleteQuery, saveQuery, updateQuery, updateRoute } from '@/store/modules/route';
-import { deleteHeader, fetchRouteHeaders, getHeaders, saveHeader, updateHeader } from '@/store/modules/header';
 import Header from '@/types/Header';
+
+import { saveQuery, updateQuery, deleteQuery } from '@/store/modules/query';
+import { updateRoute } from '@/store/modules/route';
+import { deleteHeader, fetchRouteHeaders, getHeaders, saveHeader, updateHeader } from '@/store/modules/header';
+import { fetchRouteQueries, getQueries } from '@/store/modules/query';
 
 @Component
 export default class Request extends Vue {
@@ -159,10 +162,26 @@ export default class Request extends Vue {
     onRouteChange(value: Route): void {
         Object.assign(this.routeUpdate, { ...value })
 
-        if (this._routeHeaders.length === 0 && this.route.id) {
-            fetchRouteHeaders(this.$store, this.route.id)
-                .catch((error) => { console.log(error) })
+        if (this.route.id) {
+            if (this._routeHeaders.length === 0) {
+                fetchRouteHeaders(this.$store, this.route.id)
+                    .catch((error) => { console.log(error) })
+            }
+
+            if (this._routeQueries.length === 0) {
+                fetchRouteQueries(this.$store, this.route.id)
+                    .catch((error) => { console.log(error) })
+            }
         }
+    }
+
+    private routeQueries: Query[] = [];
+    get _routeQueries(): Query[] {
+        return getQueries(this.$store).filter(query => query.routeId === this.route.id)
+    }
+    @Watch('_routeQueries', { deep: true })
+    on_RouteQueriesChange(): void {
+        this.routeQueries = JSON.parse(JSON.stringify(this._routeQueries));
     }
 
     // routeUpdate holds the input values bound on the page
@@ -174,23 +193,19 @@ export default class Request extends Vue {
 
     private routeHeaders: Header[] = [];
     get _routeHeaders(): Header[] {
-        if (this.route.id) {
-            return getHeaders(this.$store).filter(header => header.routeId === this.route.id)
-        }
-
-        return []
+        return getHeaders(this.$store).filter(header => header.routeId === this.route.id)
     }
     @Watch('_routeHeaders', { deep: true })
-    on_RouteHeadersChange() {
+    on_RouteHeadersChange(): void {
         this.routeHeaders = JSON.parse(JSON.stringify(this._routeHeaders))
     }
 
     private addQuery(): void {
-        this.routeUpdate.queries.push({
+        this.routeQueries.push({
+            routeId: this.route.id,
             id: 0,
             name: '',
             value: '',
-            routeId: this.route.id as number
         })
     }
 
@@ -208,10 +223,10 @@ export default class Request extends Vue {
     }
 
     private hasQueryChanged(index: number): boolean {
-        if (this.routeUpdate.id && this.route.id) {
-            return this.routeUpdate.queries[index].name === this.route.queries[index].name &&
-                this.routeUpdate.queries[index].value == this.route.queries[index].value;
-        }
+        const _query = this._routeQueries[index];
+        const query = this.routeQueries[index];
+
+        if (query.name === _query.name && query.value === _query.value) return true;
 
         return false
     }
@@ -225,41 +240,18 @@ export default class Request extends Vue {
         return false;
     }
 
-    private getRequestObject(query: Query): ProjectRouteQuery {
-        return {
-            projectId: this.projectId,
-            routeId: this.route.id!,
-            query
-        }
-    }
-
     private saveQuery(query: Query, index: number) {
-        const requestObject = this.getRequestObject(query)
-
-        saveQuery(this.$store, requestObject)
-            .then(() => {
-                this.route.queries.splice(index, 1)
-            })
+        saveQuery(this.$store, query)
+            .catch(error => { console.log(error) })
     }
     
     private updateQuery(query: Query, queryIndex: number): void {
-        const requestObject = this.getRequestObject(query)
-
-        if (!requestObject.query.id) {
-            delete requestObject.query.id
-        }
-
-        updateQuery(this.$store, requestObject)
-            .then((query: Query) => {
-                this.routeUpdate.queries[queryIndex] = { ...query };
-            })
+        updateQuery(this.$store, query)
             .catch(error => { console.log(error) })
     }
 
     private deleteQuery(query: Query): void {
-        const requestObject = this.getRequestObject(query)
-
-        deleteQuery(this.$store, requestObject)
+        deleteQuery(this.$store, query)
     }
 
     private saveHeader(header: Header) {
