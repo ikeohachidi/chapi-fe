@@ -4,6 +4,7 @@ export default class Route {
     id?: number;
     name: string;
     description: string;
+    destination: string;
     url: string;
     method: HTTPMethod;
     path: string;
@@ -16,6 +17,7 @@ export default class Route {
         this.id = 0;
         this.name = '';
         this.description = '';
+        this.destination = '';
         this.url = '';
         this.method = HTTPMethod.GET;
         this.path = '';

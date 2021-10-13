@@ -13,11 +13,11 @@
                     <select v-model="routeUpdate.method" class="rounded-r-none w-2/12" style="padding: 8px;" @change="updateRequest">
                         <option v-for="method in HTTPMethodOptions" :key="method" :value="method" class="uppercase">{{ method }}</option>
                     </select>
-                    <input class="rounded-l-none border-l-0 w-10/12" v-model="route.destination">
+                    <input class="rounded-l-none border-l-0 w-10/12" v-model="routeUpdate.destination">
                 </div>
                 <button 
                     class="mt-4 ml-auto"
-                    :disabled="(routeUpdate.destination === route.destination) && (routeUpdate.type === route.type)"
+                    :disabled="(routeUpdate.destination === route.destination) && (routeUpdate.method === route.method)"
                     @click="updateRequest"
                 >
                     Save
@@ -124,7 +124,7 @@
                     class="w-full font-mono resize-none" 
                     onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}"
                     placeholder="{}"
-                    v-model="route.body"
+                    v-model="routeUpdate.body"
                 >
                 </textarea>
                 <div class="flex">
@@ -218,7 +218,7 @@ export default class Request extends Vue {
     }
 
     private updateRequest() {
-        updateRoute(this.$store, this.route)
+        updateRoute(this.$store, this.routeUpdate)
             .catch(error => { console.log(error) })
     }
 

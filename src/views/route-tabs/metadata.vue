@@ -10,7 +10,7 @@
             <textarea class="w-full resize-none" rows="6" placeholder="Route Description" v-model="description"></textarea>
             <button 
                 class="mt-4 ml-auto"
-                :disabled="route.description == description"
+                :disabled="route.description === description"
                 @click="updateMetadata"
             >
                 Save
@@ -31,9 +31,9 @@ export default class Metadata extends Vue {
 
     private description = '';
 
-    @Watch('route', { deep: true })
+    @Watch('route', { deep: true, immediate: true })
     onRouteChange(): void {
-        this.description = this.route.description;
+        this.description = this.route.description.slice();
     }
 
     private updateMetadata(): void {
