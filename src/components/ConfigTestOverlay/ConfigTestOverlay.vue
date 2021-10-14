@@ -5,7 +5,11 @@
                 <span class="text-gray-400 cursor-pointer" @click="close">
                     <i class="ri-close-line"></i>
                 </span>
-                <span class="ml-6">Proxy Response</span>
+                <span class="ml-6">
+                    Response 
+                    <span class="ml-1">({{ configResult.responseTime }} seconds)</span>
+                </span>
+                <button @click="reRunTest" class="ml-auto">Re-run</button>
             </p>
             <div class="font-mono px-4 py-5 text-sm overflow-y-auto flex-grow" :class="[configResult.type ? 'text-green-600' : 'text-red-600']">
                 <p v-if="configResult">{{ configResult.data }}</p>
@@ -25,6 +29,10 @@ export default class className extends Vue {
 
     private close() {
         this.$emit('close')
+    }
+
+    private reRunTest() {
+        this.$emit('redo-test')
     }
 }
 </script>

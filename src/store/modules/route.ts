@@ -126,7 +126,8 @@ const route = {
             return new Promise((resolve, reject) => {
                 let isResponseOk = true;
                 fetch(serverURL, {
-                    method: 'GET'
+                    method: 'GET',
+                    mode: 'cors',
                 })
                 .then(response => {
                     if (!response.ok) {

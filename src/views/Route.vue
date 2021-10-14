@@ -3,6 +3,7 @@
         <config-test-overlay 
             v-if="showConfigResult" 
             :configResult="configTestResult"
+            @redo-test="testRouteConfig"
             @close="showConfigResult = false"
         />
 
@@ -71,7 +72,8 @@ export default class RouteView extends Vue {
     private showConfigResult = false;
     private configTestResult = {
         data: '',
-        type: false
+        type: false,
+        responseTime: 0,
     }
 
     get route(): Route | null {
@@ -102,7 +104,7 @@ export default class RouteView extends Vue {
 
     get serverURL(): string {
         if (this.route) {
-            return `${this.routeProject.name}.${this.siteURL}${this.route.path}`;
+            return `http://${this.routeProject.name}.${this.siteURL}${this.route.path}`;
         }
         return '';
     }
@@ -110,17 +112,21 @@ export default class RouteView extends Vue {
     private testRouteConfig() {
         this.showConfigResult = true;
 
+        const start = new Date().getTime();
+
         testRoute(this.$store, this.serverURL)
             .then(response => {
                 this.configTestResult = {
                     data: response,
-                    type: true
+                    type: true,
+                    responseTime: (new Date().getTime() - start) / 1000
                 }
             })
             .catch(error => {
                 this.configTestResult = {
                     data: error,
-                    type: false 
+                    type: false,
+                    responseTime: (new Date().getTime() - start) / 1000
                 }
             })
     }

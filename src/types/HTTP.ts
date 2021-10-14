@@ -14,4 +14,5 @@ export type Response<T> = {
 export type ProxyConfigResult = {
     data: string;
     type: boolean;
+    responseTime: number;
 }
