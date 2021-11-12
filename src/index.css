@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-    font-family: 'dm sans', sans-serif;
+    font-family: 'ibm plex sans', sans-serif;
     @apply text-gray-700;
 }
 
