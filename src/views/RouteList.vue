@@ -15,6 +15,9 @@
                 <p class="w-6/12 border mb-0 px-4 text-sm border-l-0 cursor-not-allowed flex items-center overflow-ellipsis border-gray-200" :title="serverURL">{{ serverURL }}</p>
                 <input type="text" placeholder="/users" class="rounded-l-none border-l-0 w-5/12" v-model="path">
             </div>
+            <small class="block text-right" v-if="correctedPath !== path">Your path will be: 
+                <span class="text-green-600">{{ correctedPath }}</span>
+            </small>
             <textarea rows="8" class="mt-5 resize-none w-full" v-model="description" placeholder="Route Description"></textarea>
         </modal>
         <div class="w-full rounded-lg border-dashed border-4 flex items-center justify-center" @click="showNewRouteModal = true">
@@ -51,8 +54,11 @@ import { getProjectById } from '@/store/modules/project';
 })
 export default class RouteList extends Vue {
     private path = '';
+    get correctedPath(): string {
+        return this.path.replace(/\s+/g, '-')
+    }
     private description = '' ;
-    private method = 'GET';
+    private method: HTTPMethod = HTTPMethod.GET;
     private showNewRouteModal = false;
 
     get projectId(): number {
@@ -73,15 +79,24 @@ export default class RouteList extends Vue {
         return getRoutes(this.$store).filter(route => route.projectId === this.projectId)
     }
 
+    private resetInputs(): void {
+        this.path = '';
+        this.description = '';
+        this.method = HTTPMethod.GET;
+    }
+
     private createNewRoute() {
         const route: CreateRouteRequest = {
             projectId: this.projectId,
-            path: this.path,
+            path: this.correctedPath,
             method: this.method,
             description: this.description
         }
 
-        createRoute(this.$store, route)
+        // TODO: handle returned promise
+        createRoute(this.$store, route);
+        this.showNewRouteModal = false;
+        this.resetInputs();
     }
 
     private goToRoute(route: Route): void {
