@@ -62,7 +62,8 @@ const project = {
                 })
                 .then(response => response.json())
                 .then((body: Response<Project[]>) => {
-                    context.commit('setProjects', body.data)
+                    context.commit('setProjects', body.data);
+
                     resolve(body.data)
                 })
                 .catch(error => reject(error))
