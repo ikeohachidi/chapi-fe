@@ -11,7 +11,7 @@ import './index.css';
 Vue.config.productionTip = false
 
 router.beforeEach(async (to: Route, from: Route, next: NavigationGuardNext) => {
-  if (to.meta.requiresAuth) {
+  if (to.meta!.requiresAuth) {
     if (store.state.user.user) {
       next();
     } else {

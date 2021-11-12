@@ -114,6 +114,10 @@ export default class ProjectNav extends Vue {
                 name: this.newProjectName,
                 userId: this.user.id
             })
+            .then(() => {
+                this.showNewProjectModal = false;
+                this.newProjectName = '';
+            })
         }
     }
 
