@@ -22,9 +22,7 @@
                 <metadata :route="route"/>
             </tab>
             <tab title="Security">
-                <div class="section content-padding">
-                    <p>Coming soon 😃</p>
-                </div>
+                <security :route="route"/>
             </tab>
             <tab title="Analytics">
                 <div class="section content-padding">
@@ -41,8 +39,7 @@ import { Route as VueRoute, NavigationGuardNext } from 'vue-router';
 
 import ConfigTestOverlay from '@/components/ConfigTestOverlay/ConfigTestOverlay.vue';
 import { Tab, Tabs } from '@/components/Tabs';
-import Metadata from './route-tabs/metadata.vue'
-import Request from './route-tabs/request.vue'
+import { Metadata, Request, Security } from './route-tabs'
 
 import Route from '@/types/Route'
 import Project from '@/types/Project';
@@ -54,7 +51,8 @@ import { getProjectById } from '@/store/modules/project';
         ConfigTestOverlay,
         Tab, Tabs,
         Metadata,
-        Request
+        Request,
+        Security
     },
     beforeRouteEnter: (to: VueRoute, from: VueRoute, next: NavigationGuardNext) => {
         if (!to.query['project'] || !to.query['route']) {
