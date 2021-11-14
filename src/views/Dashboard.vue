@@ -25,7 +25,7 @@ export default class Dashboard extends Vue {}
 <style lang="scss" scoped>
 .dashboard {
     @apply border-t border-gray-200;
-    height: calc(100vh - 41px);
+    height: calc(100vh - 63px);
     display: flex;
 }
 
