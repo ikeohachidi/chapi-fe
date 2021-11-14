@@ -17,18 +17,18 @@
                     </thead>
                     <tbody>
                         <tr v-for="(origin, originIndex) in routeOrigins" :key="originIndex">
-                            <td class="px-3 w-4/5">
-                                <input class="w-full" type="text" v-model="origin.url">
+                            <td class="px-3 w-4/5 py-2">
+                                <input class="w-full" type="text" v-model="origin.url" placeholder="https://">
                             </td>
                             <td class="w-1/5">
                                 <div class="flex items-center justify-end">
-                                    <button @click="updatePermOrigin(origin)" :disabled="hasOriginChanged(originIndex)" v-if="origin.id > 0">
+                                    <button @click="updatePermOrigin(origin)" :disabled="!hasOriginChanged(originIndex)" v-if="origin.id > 0">
                                         Update
                                     </button>
                                     <button @click="savePermOrigin(origin)" v-else>
                                         Save 
                                     </button>
-                                    <span class="text-red-600 cursor-pointer ml-4 hover:scale-50" @click="deletePermOrigin(query)">
+                                    <span class="text-red-600 cursor-pointer ml-4 hover:scale-50" @click="deletePermOrigin(origin)">
                                         <i class="ri-delete-bin-line"></i>
                                     </span>
                                 </div>
@@ -47,30 +47,26 @@ import { Vue, Component, Watch, Prop } from 'vue-property-decorator';
 
 import { createPermOrigin, deletePermOrigin, fetchPermOrigins, getPermOrigins, updatePermOrigin } from '@/store/modules/perm-origin';
 
-import { PermOrigin, RoutePermOrigin } from '@/types/Security';
+import { PermOrigin } from '@/types/Security';
 import Route from '@/types/Route';
 
 @Component
 export default class Security extends Vue {
     @Prop({ default: new Route }) route!: Route;
     
-    get whitelistURLs(): RoutePermOrigin {
-        return getPermOrigins(this.$store);
-    }
-
     private routeOrigins: PermOrigin[] = [];
 
     get _routeOrigins(): PermOrigin[] {
-        return this.whitelistURLs[this.route.id!];
+        return getPermOrigins(this.$store)[this.route.id!] || [];
     }
     @Watch('_routeOrigins', { deep: true })
     on_RouteOriginsChange(value: PermOrigin[]) {
-        this.routeOrigins = [...value];
+        this.routeOrigins = JSON.parse(JSON.stringify(value));
     }
 
     private addOrigin(): void {
         this.routeOrigins.push({ 
-            id: -1,
+            id: 0,
             url: '',
             routeId: this.route.id!
         })

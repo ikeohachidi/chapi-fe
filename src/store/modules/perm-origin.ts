@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import { ActionContext } from 'vuex';
 import { getStoreAccessors } from 'vuex-typescript';
 
@@ -32,7 +33,7 @@ const store = {
 
             const { routeId } = permOrigins[0];
 
-            state.permOrigin[routeId] = permOrigins;
+            Vue.set(state.permOrigin, routeId, permOrigins);
         },
         savePermOrigin(state: PermOriginState, permOrigin: PermOrigin): void {
             const { routeId } = permOrigin;
@@ -42,9 +43,9 @@ const store = {
                 const index = routeOrigins.findIndex(origin => origin.id === permOrigin.id);
 
                 if (index !== -1) {
-                    routeOrigins[index] = permOrigin;
+                    Object.assign(routeOrigins[index], permOrigin)
                 } else {
-                    state.permOrigin[routeId].push(permOrigin);
+                    routeOrigins.push(permOrigin);
                 }
 
                 return
