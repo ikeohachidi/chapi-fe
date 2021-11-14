@@ -51,7 +51,9 @@ const store = {
                 return
             }
 
-            this.setPermOrigin(state, [permOrigin]);
+            // create the permission origin for the route
+            // since it doesn't exist
+            Vue.set(state.permOrigin, routeId, [permOrigin]);
         },
         removePermOrigin(state: PermOriginState, permOrigin: PermOrigin): void {
             const { routeId } = permOrigin;
@@ -109,7 +111,7 @@ const store = {
                 })
                 .then((res) => res.json())
                 .then((body: Response<PermOrigin[]>) => {
-                    if (body.successful) context.commit('remove', permOrigin);
+                    if (body.successful) context.commit('removePermOrigin', permOrigin);
                 })
             })
         }

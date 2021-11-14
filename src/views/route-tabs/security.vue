@@ -28,7 +28,7 @@
                                     <button @click="savePermOrigin(origin)" v-else>
                                         Save 
                                     </button>
-                                    <span class="text-red-600 cursor-pointer ml-4 hover:scale-50" @click="deletePermOrigin(origin)">
+                                    <span class="text-red-600 cursor-pointer ml-4 hover:scale-50" @click="deletePermOrigin(origin, originIndex)">
                                         <i class="ri-delete-bin-line"></i>
                                     </span>
                                 </div>
@@ -93,7 +93,11 @@ export default class Security extends Vue {
         updatePermOrigin(this.$store, permOrigin)
     }
 
-    private deletePermOrigin(permOrigin: PermOrigin): void {
+    private deletePermOrigin(permOrigin: PermOrigin, index: number): void {
+        if (permOrigin.id === 0) {
+            this.routeOrigins.splice(index, 1);
+            return;
+        }
         // TODO: handle promise
         deletePermOrigin(this.$store, permOrigin)
     }
