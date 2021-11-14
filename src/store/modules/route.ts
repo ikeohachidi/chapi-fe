@@ -48,7 +48,8 @@ const route = {
             return new Promise((resolve, reject) => {
                 fetch(`${API}/route`, {
                         method: 'POST',
-                        body: JSON.stringify(route)
+                        body: JSON.stringify(route),
+                        credentials: 'include'
                     })
                     .then((res) => res.json())
                     .then((body: Response<number>) => {
@@ -71,7 +72,8 @@ const route = {
             return new Promise((resolve, reject) => {
                 fetch(`${API}/route`, {
                         method: 'PUT',
-                        body: JSON.stringify(requestObject)
+                        body: JSON.stringify(requestObject),
+                        credentials: 'include'
                     })
                     .then((res) => res.json())
                     .then((body: Response<void>) => {
@@ -89,6 +91,7 @@ const route = {
             return new Promise((resolve, reject) => {
                 fetch(`${API}/route?id=${routeId}`, {
                         method: 'DELETE',
+                        credentials: 'include'
                     })
                     .then((res) => res.json())
                     .then((body: Response<void>) => {
@@ -104,22 +107,24 @@ const route = {
         },
         fetchProjectRoutes(context: RouteContext, projectId: number): Promise<void> {
             return new Promise((resolve, reject) => {
-                fetch(`${API}/route/${projectId}`)
-                    .then((res) => res.json())
-                    .then((body: Response<Route[]>) => {
-                        if (body.successful) {
-                            body.data.forEach(route => {
-                                context.commit('addRoute', {
-                                    ...route,
-                                    projectId
-                                })
+                fetch(`${API}/route?project=${projectId}`, {
+                    credentials: 'include'
+                })
+                .then((res) => res.json())
+                .then((body: Response<Route[]>) => {
+                    if (body.successful) {
+                        body.data.forEach(route => {
+                            context.commit('addRoute', {
+                                ...route,
+                                projectId
                             })
-                        }
-                        resolve()
-                    })
-                    .catch((error) => {
-                        reject(error)
-                    })
+                        })
+                    }
+                    resolve()
+                })
+                .catch((error) => {
+                    reject(error)
+                })
             }) 
         },
         testRoute(context: RouteContext, serverURL: string): Promise<string> {
