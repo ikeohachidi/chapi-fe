@@ -11,8 +11,14 @@
                 </span>
                 <button @click="reRunTest" class="ml-auto">Re-run</button>
             </p>
-            <div class="font-mono px-4 py-5 text-sm overflow-y-auto flex-grow" :class="[configResult.type ? 'text-green-600' : 'text-red-600']">
-                <p v-if="configResult">{{ configResult.data }}</p>
+            <div class="font-mono px-4 py-5 text-sm overflow-y-auto flex-grow">
+                <p>Status Code: <span :class="[configResult.type ? 'text-green-600' : 'text-red-600']">{{ configResult.data.status }}</span></p>
+                <p>Status Text: <span :class="[configResult.type ? 'text-green-600' : 'text-red-600']">{{ configResult.data.statusText }}</span></p>
+                <p class="mt-2" v-if="configResult">
+                    <code>
+                        {{ configResult.data.body }}
+                    </code>
+                </p>
             </div>
         </div>
     </section>

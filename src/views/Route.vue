@@ -69,7 +69,7 @@ import { getProjectById } from '@/store/modules/project';
 export default class RouteView extends Vue {
     private showConfigResult = false;
     private configTestResult = {
-        data: '',
+        data: {},
         type: false,
         responseTime: 0,
     }

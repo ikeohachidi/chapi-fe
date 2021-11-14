@@ -2,7 +2,7 @@ import { ActionContext } from 'vuex';
 import { getStoreAccessors } from 'vuex-typescript';
 import Route, { CreateRouteRequest } from '@/types/Route';
 import StoreState from '@/store/storeState';
-import { Response } from '@/types/HTTP';
+import { Response, TestResponse } from '@/types/HTTP';
 
 type RouteContext = ActionContext<RouteState, StoreState>;
 
@@ -127,9 +127,15 @@ const route = {
                 })
             }) 
         },
-        testRoute(context: RouteContext, serverURL: string): Promise<string> {
+        testRoute(context: RouteContext, serverURL: string): Promise<TestResponse> {
             return new Promise((resolve, reject) => {
                 let isResponseOk = true;
+                const testResponse: TestResponse = {
+                    headers: null,
+                    status: 0,
+                    statusText: '',
+                    body: '',
+                }
                 fetch(serverURL, {
                     method: 'GET',
                     mode: 'cors',
@@ -140,6 +146,10 @@ const route = {
                     }
 
                     const contentType = response.headers.get('content-type');
+                    testResponse.headers = response.headers;
+                    testResponse.status = response.status;
+                    testResponse.statusText = response.statusText;
+
                     if (!contentType || !contentType.includes('application/json')) {
                         return response.text();
                     }
@@ -147,9 +157,10 @@ const route = {
                 })
                 .then(body => {
                     if (isResponseOk) {
-                        resolve(body)
+                        testResponse.body = body;
+                        resolve(testResponse)
                     } else {
-                        reject(body)
+                        reject(testResponse)
                     }
                 })
                 .catch(error => { 

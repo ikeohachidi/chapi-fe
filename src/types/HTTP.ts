@@ -11,6 +11,13 @@ export type Response<T> = {
     data: T;
 }
 
+export type TestResponse = {
+    headers: Headers | null;
+    status: number;
+    statusText: string;
+    body: string;
+}
+
 export type ProxyConfigResult = {
     data: string;
     type: boolean;
