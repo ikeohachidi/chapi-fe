@@ -108,12 +108,15 @@ const query = {
         },
         deleteQuery(context: QueryContext, query: Query): Promise<void> {
             return new Promise((resolve, reject) => {
-                fetch(`${API}/query?route=${query.routeId}&name=${query.name}`, {
-                        method: 'DELETE'
+                fetch(`${API}/query?id=${query.id}&route_id=${query.routeId}`, {
+                        method: 'DELETE',
+                        credentials: 'include'
                     })
                     .then((res) => res.json())
-                    .then(() => {
-                        context.commit('deletequery', query.id)
+                    .then((body: Response<string>) => {
+                        if (body.successful) {
+                            context.commit('deleteQuery', query.id)
+                        }
                         resolve()
                     })
                     .catch((error) => {
