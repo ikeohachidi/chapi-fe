@@ -3,6 +3,7 @@
         <config-test-overlay 
             v-if="showConfigResult" 
             :configResult="configTestResult"
+            :isLoading="isLoadingTest"
             @redo-test="testRouteConfig"
             @close="showConfigResult = false"
         />
@@ -73,6 +74,7 @@ export default class RouteView extends Vue {
         type: false,
         responseTime: 0,
     }
+    private isLoadingTest = false;
 
     get route(): Route | null {
         const routes = getRoutes(this.$store);
@@ -112,6 +114,7 @@ export default class RouteView extends Vue {
 
         const start = new Date().getTime();
 
+        this.isLoadingTest = true;
         testRoute(this.$store, this.serverURL)
             .then(response => {
                 this.configTestResult = {
@@ -126,6 +129,9 @@ export default class RouteView extends Vue {
                     type: false,
                     responseTime: (new Date().getTime() - start) / 1000
                 }
+            })
+            .finally(() => {
+                this.isLoadingTest = false;
             })
     }
 

@@ -11,7 +11,12 @@
                 </span>
                 <button @click="reRunTest" class="ml-auto">Re-run</button>
             </p>
-            <div class="font-mono px-4 py-5 text-sm overflow-y-auto flex-grow">
+
+            <div class="flex flex-col items-center justify-center my-auto" v-if="isLoading">
+                <img src="@/assets/loading.gif" alt="loading image">
+                <p class="mt-3">Fetching resource...</p>
+            </div>
+            <div class="font-mono px-4 py-5 text-sm overflow-y-auto flex-grow" v-else>
                 <p>Status Code: <span :class="[configResult.type ? 'text-green-600' : 'text-red-600']">{{ configResult.data.status }}</span></p>
                 <p>Status Text: <span :class="[configResult.type ? 'text-green-600' : 'text-red-600']">{{ configResult.data.statusText }}</span></p>
 
@@ -36,6 +41,7 @@ import { ProxyConfigResult } from '@/types/HTTP';
 @Component
 export default class className extends Vue {
     @Prop({ default: null }) configResult!: ProxyConfigResult;
+    @Prop({ default: false }) isLoading!: boolean;
 
     private close() {
         this.$emit('close')
