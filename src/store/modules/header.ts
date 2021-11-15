@@ -107,12 +107,15 @@ const header = {
         },
         deleteHeader(context: HeaderContext, header: Header): Promise<void> {
             return new Promise((resolve, reject) => {
-                fetch(`${API}/header?route=${header.routeId}&name=${header.name}`, {
-                        method: 'DELETE'
+                fetch(`${API}/header?id=${header.id}&route_id=${header.routeId}`, {
+                        method: 'DELETE',
+                        credentials: 'include'
                     })
                     .then((res) => res.json())
-                    .then(() => {
-                        context.commit('deleteHeader', header.id)
+                    .then((body: Response<string>) => {
+                        if (body.successful) {
+                            context.commit('deleteHeader', header.id)
+                        }
                         resolve()
                     })
                     .catch((error) => {
