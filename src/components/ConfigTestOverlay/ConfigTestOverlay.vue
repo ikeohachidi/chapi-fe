@@ -14,10 +14,14 @@
             <div class="font-mono px-4 py-5 text-sm overflow-y-auto flex-grow">
                 <p>Status Code: <span :class="[configResult.type ? 'text-green-600' : 'text-red-600']">{{ configResult.data.status }}</span></p>
                 <p>Status Text: <span :class="[configResult.type ? 'text-green-600' : 'text-red-600']">{{ configResult.data.statusText }}</span></p>
-                <p class="mt-2" v-if="configResult">
-                    <code>
-                        {{ configResult.data.body }}
-                    </code>
+
+                <p class="mt-2">
+                    <pre v-if="configResult.data.responseType !== 'image'" class="border bg-gray-50 rounded-md overflow-x-auto">
+                        <code>
+                            {{ configResult.data.body }}
+                        </code>
+                    </pre>
+                    <img :src="configResult.data.body" v-else>
                 </p>
             </div>
         </div>

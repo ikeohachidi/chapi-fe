@@ -14,6 +14,7 @@ export type Response<T> = {
 export type TestResponse = {
     headers: Headers | null;
     status: number;
+    responseType: "image" | "video" | "json" | "text";
     statusText: string;
     body: string;
 }

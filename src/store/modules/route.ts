@@ -133,6 +133,7 @@ const route = {
                 const testResponse: TestResponse = {
                     headers: null,
                     status: 0,
+                    responseType: "json",
                     statusText: '',
                     body: '',
                 }
@@ -150,14 +151,25 @@ const route = {
                     testResponse.status = response.status;
                     testResponse.statusText = response.statusText;
 
-                    if (!contentType || !contentType.includes('application/json')) {
-                        return response.text();
+                    if (contentType) {
+                        if (contentType === 'application/json') {
+                            return response.json();
+                        }
+    
+                        if (contentType.includes('image')) {
+                            testResponse.responseType = 'image';
+                            return response.blob();
+                        }
                     }
-                    return response.json();
+                    return response.text();
                 })
                 .then(body => {
                     if (isResponseOk) {
-                        testResponse.body = body;
+                        if (testResponse.responseType === 'image') {
+                            testResponse.body = URL.createObjectURL(body)
+                        } else {
+                            testResponse.body = body;
+                        }
                         resolve(testResponse)
                     } else {
                         reject(testResponse)
