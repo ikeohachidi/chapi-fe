@@ -66,7 +66,7 @@ const header = {
         },
         saveHeader(context: HeaderContext, header: Header): Promise<number> {
             return new Promise((resolve, reject) => {
-                fetch(`${API}/header?route=${header.routeId}`, { 
+                fetch(`${API}/header`, { 
                         method: 'POST',
                         credentials: 'include',
                         body: JSON.stringify(header)
